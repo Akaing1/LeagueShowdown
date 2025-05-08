@@ -32,14 +32,12 @@ class WhoAmI:
             with open(self.CHAMPIONS_FILE, 'r', encoding='utf-8') as file:
                 content = file.read()
 
-            # Split content into champion blocks
             champion_blocks = re.split(r'\[Champion:\s*(.*?)]', content)[1:]
 
             for i in range(0, len(champion_blocks), 2):
                 champion = champion_blocks[i].strip()
                 hints_text = champion_blocks[i + 1].strip()
 
-                # Extract hints (lines starting with -)
                 hints = [hint.strip('- ').strip()
                          for hint in hints_text.split('\n')
                          if hint.startswith('-')]
@@ -54,7 +52,6 @@ class WhoAmI:
 
         except FileNotFoundError:
             logger.error(f"Champions file not found: {self.CHAMPIONS_FILE}")
-            # Fallback to default data
             rounds = [
                 {
                     "champion": "Default Champion 1",
@@ -69,7 +66,6 @@ class WhoAmI:
         return rounds
 
     def init_data(self) -> Dict:
-
         self.current_round += 1
 
         if self.current_round >= len(self.rounds):
@@ -100,7 +96,6 @@ class WhoAmI:
         }
 
     def process_guess(self, guess: str) -> Tuple[bool, int]:
-
         clean_guess = guess.strip().lower()
         is_correct = clean_guess == self.current_champion.lower()
 
@@ -118,7 +113,6 @@ class WhoAmI:
         return False, -100
 
     def reveal_hint(self) -> str:
-        """Reveal next hint in predefined order"""
         if self.next_hint_index >= len(self.hints):
             logger.warning(
                 f"Round {self.current_round + 1} | "
@@ -139,7 +133,6 @@ class WhoAmI:
         return hint.text
 
     def get_round_state(self) -> Dict:
-
         return {
             'round_number': self.current_round + 1,
             'total_rounds': len(self.rounds),

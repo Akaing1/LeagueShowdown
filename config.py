@@ -4,21 +4,17 @@ from pathlib import Path
 
 
 class Config:
-    # Paths
     BASE_DIR = Path(__file__).parent
     LOG_DIR = BASE_DIR / "logs"
 
-    # Ensure log directory exists
     LOG_DIR.mkdir(exist_ok=True)
 
-    # Server
     SERVER_SECRET = os.getenv('GAMESHOW_SECRET', 'dev-secret-123')
-    PORT = 5555
-    MAX_PLAYERS = 8
+    PORT = 8008
+    MAX_PLAYERS = 3
 
     @staticmethod
     def setup_logger(name: str, level=logging.INFO):
-        """Configure a module-specific logger"""
         logger = logging.getLogger(name)
         logger.setLevel(level)
 

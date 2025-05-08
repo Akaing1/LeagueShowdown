@@ -1,3 +1,4 @@
-from .whoami_test import TestWhoAmI
+from .whoami_test import TestWhoAmIHint
+from .emoGG_test import TestEmoGG
 
-__all__ = ['TestWhoAmI']
+__all__ = ['TestWhoAmIHint', 'TestEmoGG']

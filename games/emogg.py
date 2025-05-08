@@ -1,121 +1,111 @@
 from dataclasses import dataclass
-from typing import List, Dict, Tuple, Optional
-from pathlib import Path
+from typing import List, Dict, Tuple
 from config import config
+import re
 
-logger = config.setup_logger('emo_gg')
+logger = config.setup_logger('game.emogg')
 
 
 @dataclass
-class EmoRound:
-    answer: str
-    emoticons: List[str]
-    hints_used: int = 0
-
-    def __post_init__(self):
-        logger.debug(f"Loaded round: {self.answer}")
+class EmoGGRound:
+    item_type: str
+    item_name: str
+    emoji_sequence: str
 
 
 class EmoGG:
-    ROUNDS_FILE = "emo_gg_rounds.txt"  # Path to your data file
+    name = "EmoGG - League Emoji Guessing Game"
+    ROUNDS_FILE = "resources/emogg.txt"
 
     def __init__(self):
-        self.logger = config.setup_logger('emo_gg.core')
-        self.rounds = self._load_rounds()
         self.current_round_index = -1
-        self.score = 0
-        self.logger.info(f"Game initialized with {len(self.rounds)} rounds")
+        self.rounds: List[EmoGGRound] = self._load_rounds_data()
+        logger.info(f"Initialized {self.name} with {len(self.rounds)} rounds")
 
-    def _load_rounds(self) -> List[EmoRound]:
+    def _load_rounds_data(self) -> List[EmoGGRound]:
         rounds = []
+        round_pattern = re.compile(r'\[(items|champions):(.*?)](.*?)(?=\[|$)', re.DOTALL)
+
         try:
             with open(self.ROUNDS_FILE, 'r', encoding='utf-8') as f:
-                for line in f:
-                    line = line.strip()
-                    if not line or line.startswith("#"):
-                        continue
+                content = f.read()
 
-                    try:
-                        answer, emojis = line.split("|", 1)
-                        rounds.append(EmoRound(
-                            answer=answer.strip(),
-                            emoticons=[e.strip() for e in emojis.split(",")]
-                        ))
-                    except ValueError as e:
-                        self.logger.error(f"Invalid line format: {line} | Error: {e}")
-                        continue
+            for match in round_pattern.finditer(content):
+                item_type = match.group(1).strip()
+                item_name = match.group(2).strip()
+                emoji_sequence = match.group(3).strip()
 
-            if len(rounds) < 10:
-                self.logger.warning(f"Only {len(rounds)} rounds loaded (minimum 10 required)")
+                if item_type and item_name and emoji_sequence:
+                    rounds.append(EmoGGRound(
+                        item_type=item_type,
+                        item_name=item_name,
+                        emoji_sequence=emoji_sequence
+                    ))
+
+            logger.info(f"Loaded {len(rounds)} rounds from {self.ROUNDS_FILE}")
 
         except FileNotFoundError:
-            self.logger.critical(f"Rounds file not found: {self.ROUNDS_FILE}")
-            raise
+            logger.error(f"Rounds file not found: {self.ROUNDS_FILE}")
+            # Fallback to default rounds
+            rounds = [
+                EmoGGRound("items", "Infinity Edge", "♾️ ⚔️"),
+                EmoGGRound("champions", "Ashe", "🏹 ❄️"),
+                EmoGGRound("items", "Bloodthirster", "🩸 🗡️")
+            ]
 
-        return rounds[:10]  # Use first 10 rounds
+        return rounds
 
-    def start_next_round(self) -> Optional[Dict]:
+    def init_round(self) -> Dict:
         self.current_round_index += 1
 
-        if self.current_round_index >= min(len(self.rounds), 10):
-            self.logger.info("All rounds completed")
-            return None
+        if self.current_round_index >= len(self.rounds):
+            logger.error("No more rounds available")
+            raise ValueError("All rounds completed")
 
-        self.current_round = self.rounds[self.current_round_index]
-        self.logger.info(
-            f"Round {self.current_round_index + 1}/10 started | "
-            f"Answer: {self.current_round.answer}"
+        current_round = self.rounds[self.current_round_index]
+
+        logger.info(
+            f"Round {self.current_round_index + 1}/{len(self.rounds)} started | "
+            f"Type: {current_round.item_type} | "
+            f"Item: {current_round.item_name}"
         )
+
         return {
-            "round_number": self.current_round_index + 1,
-            "total_rounds": 10,
-            "emoticons": self.current_round.emoticons,
-            "scoring": {"correct": 200, "wrong": -100}
+            'round': self.current_round_index + 1,
+            'total_rounds': len(self.rounds),
+            'emoji_sequence': current_round.emoji_sequence,
+            'item_type': current_round.item_type,
+            'item_name': current_round.item_name,
+            'scoring': {
+                'correct': 200,
+                'wrong': -100
+            }
         }
 
-    def guess(self, attempt: str) -> Tuple[bool, int]:
-        if not self.current_round:
-            self.logger.warning("Guess attempted with no active round")
-            return False, 0
+    def process_guess(self, guess: str) -> Tuple[bool, int, str]:
+        if not 0 <= self.current_round_index < len(self.rounds):
+            raise ValueError("No active round")
 
-        is_correct = attempt.lower() == self.current_round.answer.lower()
+        current_round = self.rounds[self.current_round_index]
+        is_correct = guess.strip().lower() == current_round.item_name.lower()
         points = 200 if is_correct else -100
-        self.score += points
 
-        self.logger.info(
+        logger.info(
             f"Round {self.current_round_index + 1} | "
-            f"{'CORRECT' if is_correct else 'WRONG'} | "
-            f"Score: {points} | "
-            f"Total: {self.score}"
+            f"{'Correct' if is_correct else 'Wrong'} guess | "
+            f"Points: {points} | "
+            f"Answer: {current_round.item_name}"
         )
-        return is_correct, points
 
-    def get_hint(self) -> str:
-        if not self.current_round:
-            self.logger.warning("Hint requested with no active round")
-            return "No active round"
+        return is_correct, points, current_round.item_name
 
-        if self.current_round.hints_used >= len(self.current_round.emoticons):
-            self.logger.debug("All hints revealed")
-            return "No more hints!"
+    def get_game_state(self) -> Dict:
+        if not 0 <= self.current_round_index < len(self.rounds):
+            return {'status': 'no_active_round'}
 
-        hint = self.current_round.emoticons[self.current_round.hints_used]
-        self.current_round.hints_used += 1
-
-        self.logger.info(
-            f"Round {self.current_round_index + 1} | "
-            f"Hint {self.current_round.hints_used}/"
-            f"{len(self.current_round.emoticons)} revealed"
-        )
-        return hint
-
-    def get_state(self) -> Dict:
         return {
-            "current_round": self.current_round_index + 1,
-            "total_rounds": 10,
-            "score": self.score,
-            "hints_remaining": (
-                len(self.current_round.emoticons) - self.current_round.hints_used
-                if self.current_round else 0
-            )
+            'current_round': self.current_round_index + 1,
+            'total_rounds': len(self.rounds),
+            'last_result': None,
+            'score': None
         }

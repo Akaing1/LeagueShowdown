@@ -1,98 +1,153 @@
 from dataclasses import dataclass
-from typing import List, Dict, Optional, Tuple
+from typing import List, Dict, Tuple
 from config import config
+import re
 
-logger = config.setup_logger('emo_gg')
+logger = config.setup_logger('game.whoami')
 
 
 @dataclass
-class EmoRound:
-    answer: str
-    emoticons: List[str]
-    hints_used: int = 0
+class WhoAmIHint:
+    text: str
+    revealed: bool = False
+    reveal_order: int = 0
+
+
+class WhoAmI:
+    name = "Who is this Champion?"
+    CHAMPIONS_FILE = "resources/champions.txt"
 
     def __init__(self):
-        self.emoticicons = None
+        self.current_champion = None
+        self.rounds = self._load_champions_data()
+        self.current_round = -1
+        self.hints: List[WhoAmIHint] = []
+        self.next_hint_index = 0
+        logger.info(f"Initialized {self.name} with {len(self.rounds)} rounds")
 
-    def __post_init__(self):
-        logger.debug(f"Round loaded: {self.answer}")
+    def _load_champions_data(self) -> List[Dict]:
+        rounds = []
 
+        try:
+            with open(self.CHAMPIONS_FILE, 'r', encoding='utf-8') as file:
+                content = file.read()
 
-class EmoGG:
-    def __init__(self, rounds_data: List[Dict]):
-        self.current_round = None
-        self.logger = config.setup_logger('emo_gg.core')
-        self.rounds = [EmoRound() for r in rounds_data[:10]]  # Take first 10 rounds
-        self.current_round_index = -1
-        self.score = 0
-        self.logger.info(f"Initialized with {len(self.rounds)} rounds")
+            # Split content into champion blocks
+            champion_blocks = re.split(r'\[Champion:\s*(.*?)]', content)[1:]
 
-    def start_next_round(self) -> Optional[Dict]:
-        """Progress to next round and return emoji data"""
-        self.current_round_index += 1
+            for i in range(0, len(champion_blocks), 2):
+                champion = champion_blocks[i].strip()
+                hints_text = champion_blocks[i + 1].strip()
 
-        if self.current_round_index >= len(self.rounds):
-            self.logger.info("All rounds completed")
-            return None
+                # Extract hints (lines starting with -)
+                hints = [hint.strip('- ').strip()
+                         for hint in hints_text.split('\n')
+                         if hint.startswith('-')]
 
-        self.current_round = self.rounds[self.current_round_index]
-        self.logger.info(
-            f"Round {self.current_round_index + 1}/10 started | "
-            f"Answer: {self.current_round.answer}"
+                if champion and hints:
+                    rounds.append({
+                        "champion": champion,
+                        "hints": hints
+                    })
+
+            logger.info(f"Loaded {len(rounds)} champions from {self.CHAMPIONS_FILE}")
+
+        except FileNotFoundError:
+            logger.error(f"Champions file not found: {self.CHAMPIONS_FILE}")
+            # Fallback to default data
+            rounds = [
+                {
+                    "champion": "Default Champion 1",
+                    "hints": [
+                        "Hint 1",
+                        "Hint 2",
+                        "Hint 3"
+                    ]
+                }
+            ]
+
+        return rounds
+
+    def init_data(self) -> Dict:
+
+        self.current_round += 1
+
+        if self.current_round >= len(self.rounds):
+            logger.error("No more rounds available")
+            raise ValueError("All rounds completed")
+
+        current_data = self.rounds[self.current_round]
+        self.current_champion = current_data["champion"]
+        self.hints = [WhoAmIHint(text=hint, reveal_order=i)
+                      for i, hint in enumerate(current_data["hints"])]
+        self.next_hint_index = 0
+
+        logger.info(
+            f"Round {self.current_round + 1}/{len(self.rounds)} started | "
+            f"Champion: {self.current_champion} | "
+            f"Total hints: {len(self.hints)}"
         )
         return {
-            "round_number": self.current_round_index + 1,
-            "total_rounds": 10,
-            "emoticons": self.current_round.emoticicons,
-            "scoring": {
-                "correct": +200,
-                "wrong": -100
-            }
+            'round': self.current_round + 1,
+            'total_rounds': len(self.rounds),
+            'hints': [hint.text for hint in self.hints],
+            'scoring': {
+                'correct': +100,
+                'wrong': -100
+            },
+            'theme': 'league_of_legends',
+            'champion': self.current_champion
         }
 
-    def guess(self, attempt: str) -> Tuple[bool, int]:
-        if not self.current_round:
-            self.logger.warning("Guess attempted with no active round")
-            return False, 0
+    def process_guess(self, guess: str) -> Tuple[bool, int]:
 
-        is_correct = attempt.lower() == self.current_round.answer.lower()
-        points = 200 if is_correct else -100
-        self.score += points
+        clean_guess = guess.strip().lower()
+        is_correct = clean_guess == self.current_champion.lower()
 
-        log_msg = (
-            f"Round {self.current_round_index + 1} | "
-            f"{'CORRECT' if is_correct else 'WRONG'} | "
-            f"Score: {points} | "
-            f"Total: {self.score} | "
-            f"Answer: {self.current_round.answer}"
+        if is_correct:
+            logger.info(
+                f"Round {self.current_round + 1} | Correct guess | "
+                f"Champion: {self.current_champion} | +100 points"
+            )
+            return True, 100
+
+        logger.info(
+            f"Round {self.current_round + 1} | Wrong guess | "
+            f"Champion: {self.current_champion} | -100 points"
         )
-        self.logger.info(log_msg)
+        return False, -100
 
-        return is_correct, points
+    def reveal_hint(self) -> str:
+        """Reveal next hint in predefined order"""
+        if self.next_hint_index >= len(self.hints):
+            logger.warning(
+                f"Round {self.current_round + 1} | "
+                "All hints already revealed"
+            )
+            return "No more hints available"
 
-    def get_hint(self) -> str:
-        if not self.current_round:
-            self.logger.warning("Hint requested with no active round")
-            return "No active round"
+        hint = self.hints[self.next_hint_index]
+        hint.revealed = True
+        self.next_hint_index += 1
 
-        if self.current_round.hints_used >= len(self.current_round.emoticons):
-            self.logger.debug("All hints revealed")
-            return "No more hints!"
-
-        hint = self.current_round.emoticons[self.current_round.hints_used]
-        self.current_round.hints_used += 1
-
-        self.logger.info(
-            f"Round {self.current_round_index + 1} | "
-            f"Hint {self.current_round.hints_used}/"
-            f"{len(self.current_round.emoticons)} revealed"
+        logger.info(
+            f"Round {self.current_round + 1} | "
+            f"hint {self.next_hint_index}/{len(self.hints)} revealed | "
+            f"Champion: {self.current_champion} | "
+            f"hint: '{hint.text}'"
         )
-        return hint
+        return hint.text
 
-    def get_state(self) -> Dict:
+    def get_round_state(self) -> Dict:
+
         return {
-            "current_round": self.current_round_index + 1,
-            "total_rounds": 10,
-            "score": self.score,
-            "hints_used": self.current_round.hints_used if self.current_round else 0
+            'round_number': self.current_round + 1,
+            'total_rounds': len(self.rounds),
+            'champion': self.current_champion,
+            'revealed_hints': [
+                hint.text for hint in
+                sorted(filter(lambda c: c.revealed, self.hints),
+                       key=lambda x: x.reveal_order)
+            ],
+            'remaining_hints': len(self.hints) - self.next_hint_index
         }

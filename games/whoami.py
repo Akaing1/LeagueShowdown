@@ -1,16 +1,9 @@
-from dataclasses import dataclass
+from dataclass.whoAmIHint import WhoAmIHint
 from typing import List, Dict, Tuple
 from config import config
 import re
 
 logger = config.setup_logger('game.whoami')
-
-
-@dataclass
-class WhoAmIHint:
-    text: str
-    revealed: bool = False
-    reveal_order: int = 0
 
 
 class WhoAmI:

@@ -9,7 +9,7 @@ class Config:
 
     LOG_DIR.mkdir(exist_ok=True)
 
-    SERVER_SECRET = os.getenv('GAMESHOW_SECRET', 'dev-secret-123')
+    # SERVER_SECRET = os.getenv('GAMESHOW_SECRET', 'dev-secret-123')
     PORT = 8008
     MAX_PLAYERS = 3
 

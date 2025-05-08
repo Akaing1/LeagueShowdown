@@ -3,7 +3,7 @@ from typing import List, Dict, Tuple
 from config import config
 import re
 
-logger = config.setup_logger('game.emogg')
+logger = config.setup_logger('emogg')
 
 
 @dataclass

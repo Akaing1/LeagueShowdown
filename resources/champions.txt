@@ -1,0 +1,17 @@
+[Champion: Champion1]
+- Hint 1
+- Hint 2
+- Hint 3
+- Hint 4
+
+[Champion: Champion2]
+- Hint 1
+- Hint 2
+- Hint 3
+- Hint 4
+
+[Champion: Champion3]
+- Hint 1
+- Hint 2
+- Hint 3
+- Hint 4

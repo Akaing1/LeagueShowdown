@@ -1,0 +1,8 @@
+[items:Test 1]
+♾️ ⚔️
+
+[items:Test 2]
+♾️ ⚔️
+
+[items:Test 3]
+♾️ ⚔️

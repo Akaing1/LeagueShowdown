@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>League Game Show</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>League of Legends Game Show</h1>
+            <div class="scoreboard">
+                <div class="contestant" v-for="contestant in contestants">
+                    <span class="name">{{ contestant.name }}</span>
+                    <span class="score">{{ contestant.score }}</span>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <div class="game-area">
+                <h2>{{ currentGame }}</h2>
+
+                <!-- WhoAmI Game Display -->
+                <div v-if="gameType === 'WhoAmI'">
+                    <div class="hint-box">
+                        <p v-for="hint in revealedHints">{{ hint }}</p>
+                    </div>
+                    <button @click="getHint">Get Hint</button>
+                </div>
+
+                <!-- EmoGG Game Display -->
+                <div v-if="gameType === 'EmoGG'">
+                    <div class="emoji-display">
+                        {{ emojiSequence }}
+                    </div>
+                </div>
+
+                <div class="guess-form">
+                    <input type="text" v-model="currentGuess" placeholder="Your guess...">
+                    <button @click="submitGuess">Submit</button>
+                </div>
+            </div>
+
+            <div class="result-message" v-if="lastResult">
+                {{ lastResult }}
+            </div>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@3.2.31/dist/vue.global.js"></script>
+    <script src="/static/js/game.js"></script>
+</body>
+</html>

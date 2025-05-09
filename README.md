@@ -45,8 +45,7 @@ Games are played in this order:
 ### 4. **Emo-GG** *(Emoji Puzzles)*  
 - **Objective:** Decipher champions/items from emoji sequences  
 - **Format:**  
-  - 10 rounds (e.g., `♾️ ⚔️` = *Infinity Edge*)  
-  - Reveal emojis one-by-one  
+  - 10 rounds (e.g., `♾️ ⚔️` = *Infinity Edge*)
 - **Scoring:**  
   - Correct: +200 pts  
   - Wrong: -100 pts  

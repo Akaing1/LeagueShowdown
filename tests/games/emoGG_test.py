@@ -36,7 +36,7 @@ class TestEmoGG(unittest.TestCase):
 
     def test_initialization(self):
         self.assertEqual(len(self.game.rounds), 3)
-        self.assertEqual(self.game.current_round_index, -1)
+        self.assertEqual(self.game.current_round, -1)
         self.assertEqual(self.game.rounds[0].item_name, "Infinity Edge")
         self.assertEqual(self.game.rounds[1].emoji_sequence, "🏹 ❄️")
 
@@ -54,7 +54,7 @@ class TestEmoGG(unittest.TestCase):
     def test_init_round_data(self):
         round_data = self.game.init_round_data()
 
-        self.assertEqual(self.game.current_round_index, 0)
+        self.assertEqual(self.game.current_round, 0)
         self.assertEqual(round_data['round'], 1)
         self.assertEqual(round_data['total_rounds'], 3)
         self.assertEqual(round_data['emoji_sequence'], "♾️ ⚔️")

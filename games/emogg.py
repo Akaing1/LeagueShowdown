@@ -1,16 +1,10 @@
-from dataclasses import dataclass
 from typing import List, Dict, Tuple
 from config import config
 import re
 
+from dataclass.emoGGRound import EmoGGRound
+
 logger = config.setup_logger('emogg')
-
-
-@dataclass
-class EmoGGRound:
-    item_type: str
-    item_name: str
-    emoji_sequence: str
 
 
 class EmoGG:
@@ -18,7 +12,7 @@ class EmoGG:
     ROUNDS_FILE = "resources/emogg.txt"
 
     def __init__(self):
-        self.current_round_index = -1
+        self.current_round = -1
         self.rounds: List[EmoGGRound] = self._load_rounds_data()
         logger.info(f"Initialized {self.name} with {len(self.rounds)} rounds")
 
@@ -56,22 +50,22 @@ class EmoGG:
         return rounds
 
     def init_round_data(self) -> Dict:
-        self.current_round_index += 1
+        self.current_round += 1
 
-        if self.current_round_index >= len(self.rounds):
+        if self.current_round >= len(self.rounds):
             logger.error("No more rounds available")
             raise ValueError("All rounds completed")
 
-        current_round = self.rounds[self.current_round_index]
+        current_round = self.rounds[self.current_round]
 
         logger.info(
-            f"Round {self.current_round_index + 1}/{len(self.rounds)} started | "
+            f"Round {self.current_round + 1}/{len(self.rounds)} started | "
             f"Type: {current_round.item_type} | "
             f"Item: {current_round.item_name}"
         )
 
         return {
-            'round': self.current_round_index + 1,
+            'round': self.current_round + 1,
             'total_rounds': len(self.rounds),
             'emoji_sequence': current_round.emoji_sequence,
             'item_type': current_round.item_type,
@@ -83,15 +77,15 @@ class EmoGG:
         }
 
     def process_guess(self, guess: str) -> Tuple[bool, int, str]:
-        if not 0 <= self.current_round_index < len(self.rounds):
+        if not 0 <= self.current_round < len(self.rounds):
             raise ValueError("No active round")
 
-        current_round = self.rounds[self.current_round_index]
+        current_round = self.rounds[self.current_round]
         is_correct = guess.strip().lower() == current_round.item_name.lower()
         points = 200 if is_correct else -100
 
         logger.info(
-            f"Round {self.current_round_index + 1} | "
+            f"Round {self.current_round + 1} | "
             f"{'Correct' if is_correct else 'Wrong'} guess | "
             f"Points: {points} | "
             f"Answer: {current_round.item_name}"
@@ -100,11 +94,15 @@ class EmoGG:
         return is_correct, points, current_round.item_name
 
     def get_game_state(self) -> Dict:
-        if not 0 <= self.current_round_index < len(self.rounds):
+        if not 0 <= self.current_round < len(self.rounds):
             return {'status': 'no_active_round'}
 
+        logger.info(f"round_number: {self.current_round + 1}, "
+                    f"total_rounds: {len(self.rounds)}, "
+                    f"item: {self.rounds[self.current_round].item_name}")
+
         return {
-            'current_round': self.current_round_index + 1,
+            'current_round': self.current_round + 1,
             'total_rounds': len(self.rounds),
             'last_result': None,
             'score': None

@@ -26,7 +26,7 @@ class GameShow:
                 logger.info(f"Running Who am I?")
                 self.runWhoAmI(gameIndex)
             case 1:
-                logger.info(f"Running Emo-GG?")
+                logger.info(f"Running Emo-GG")
                 self.runEmoGG(gameIndex)
             case 2:
                 logger.info(f"placeholder")
@@ -41,10 +41,15 @@ class GameShow:
         gameState = game.get_game_state()
 
         for rounds in range(gameState['total_rounds']):
-            game.init_round_data_data()
+            game.init_round_data()
             while game.get_game_state()['remaining_hints']:
                 game.reveal_hint()
                 time.sleep(10)
 
     def runEmoGG(self, index: int):
         game = self.games[index]
+        gameState = game.get_game_state()
+
+        for rounds in range(gameState['total_rounds']):
+            game.init_round_data()
+

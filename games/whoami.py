@@ -58,7 +58,7 @@ class WhoAmI:
 
         return rounds
 
-    def init_data(self) -> Dict:
+    def init_round_data_data(self) -> Dict:
         self.current_round += 1
 
         if self.current_round >= len(self.rounds):
@@ -125,7 +125,7 @@ class WhoAmI:
         )
         return hint.text
 
-    def get_round_state(self) -> Dict:
+    def get_game_state(self) -> Dict:
         logger.info(f"round_number: {self.current_round + 1}, "
                     f"total_rounds: {len(self.rounds)}, "
                     f"champion: {self.current_champion}, "

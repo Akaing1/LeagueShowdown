@@ -51,8 +51,8 @@ class TestEmoGG(unittest.TestCase):
         self.assertEqual(rounds[1].item_name, "Ashe")
         self.assertEqual(rounds[2].emoji_sequence, "🩸 🗡️")
 
-    def test_init_round(self):
-        round_data = self.game.init_round()
+    def test_init_round_data(self):
+        round_data = self.game.init_round_data()
 
         self.assertEqual(self.game.current_round_index, 0)
         self.assertEqual(round_data['round'], 1)
@@ -62,7 +62,7 @@ class TestEmoGG(unittest.TestCase):
         self.assertEqual(round_data['scoring']['correct'], 200)
 
     def test_process_guess_correct(self):
-        self.game.init_round()
+        self.game.init_round_data()
         is_correct, points, answer = self.game.process_guess("Infinity Edge")
 
         self.assertTrue(is_correct)
@@ -70,7 +70,7 @@ class TestEmoGG(unittest.TestCase):
         self.assertEqual(answer, "Infinity Edge")
 
     def test_process_guess_incorrect(self):
-        self.game.init_round()
+        self.game.init_round_data()
         is_correct, points, answer = self.game.process_guess("Wrong Guess")
 
         self.assertFalse(is_correct)
@@ -78,26 +78,26 @@ class TestEmoGG(unittest.TestCase):
         self.assertEqual(answer, "Infinity Edge")
 
     def test_case_insensitive_guess(self):
-        self.game.init_round()
+        self.game.init_round_data()
         is_correct, _, _ = self.game.process_guess("iNfInItY eDgE")
         self.assertTrue(is_correct)
 
     def test_round_progression(self):
-        round1 = self.game.init_round()
+        round1 = self.game.init_round_data()
         self.assertEqual(round1['item_name'], "Infinity Edge")
 
-        round2 = self.game.init_round()
+        round2 = self.game.init_round_data()
         self.assertEqual(round2['item_name'], "Ashe")
 
-        round3 = self.game.init_round()
+        round3 = self.game.init_round_data()
         self.assertEqual(round3['item_name'], "Bloodthirster")
 
     def test_no_more_rounds(self):
         for i in range(3):
-            self.game.init_round()
+            self.game.init_round_data()
 
         with self.assertRaises(ValueError):
-            self.game.init_round()
+            self.game.init_round_data()
 
     def test_process_guess_no_active_round(self):
         with self.assertRaises(ValueError):
@@ -107,7 +107,7 @@ class TestEmoGG(unittest.TestCase):
         state = self.game.get_game_state()
         self.assertEqual(state['status'], 'no_active_round')
 
-        self.game.init_round()
+        self.game.init_round_data()
         state = self.game.get_game_state()
         self.assertEqual(state['current_round'], 1)
         self.assertEqual(state['total_rounds'], 3)

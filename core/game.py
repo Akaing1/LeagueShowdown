@@ -38,11 +38,11 @@ class GameShow:
 
     def runWhoAmI(self, index: int):
         game = self.games[index]
-        gameState = game.get_round_state()
+        gameState = game.get_game_state()
 
         for rounds in range(gameState['total_rounds']):
-            game.init_data()
-            while game.get_round_state()['remaining_hints']:
+            game.init_round_data_data()
+            while game.get_game_state()['remaining_hints']:
                 game.reveal_hint()
                 time.sleep(10)
 

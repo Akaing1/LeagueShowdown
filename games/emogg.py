@@ -55,7 +55,7 @@ class EmoGG:
 
         return rounds
 
-    def init_round(self) -> Dict:
+    def init_round_data(self) -> Dict:
         self.current_round_index += 1
 
         if self.current_round_index >= len(self.rounds):

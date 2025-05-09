@@ -1,8 +1,8 @@
 from typing import List, Dict, Tuple
-from config.config import config
+from src.config.config import config
 import re
 
-from dataclass.emoGGRound import EmoGGRound
+from src.dataclass.emoGGRound import EmoGGRound
 
 logger = config.setup_logger('emogg')
 

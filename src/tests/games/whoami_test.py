@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import patch, mock_open
-from games.whoami import WhoAmI
-from dataclass.whoAmIHint import WhoAmIHint
+from src.games.whoami import WhoAmI
+from src.dataclass.whoAmIHint import WhoAmIHint
 import logging
 
 TEST_FILE_CONTENT = """

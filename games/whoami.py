@@ -126,7 +126,7 @@ class WhoAmI:
         return hint.text
 
     def get_game_state(self) -> Dict:
-        if not 0 <= self.current_round < len(self.rounds):
+        if not self.current_round < len(self.rounds):
             return {'status': 'no_active_round'}
 
         logger.info(f"round_number: {self.current_round + 1}, "

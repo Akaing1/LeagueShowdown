@@ -44,7 +44,7 @@ class GameShow:
             game.init_round_data()
             while game.get_game_state()['remaining_hints']:
                 game.reveal_hint()
-                time.sleep(10)
+                time.sleep(5)
 
     def runEmoGG(self, index: int):
         game = self.games[index]
@@ -52,4 +52,4 @@ class GameShow:
 
         for rounds in range(gameState['total_rounds']):
             game.init_round_data()
-
+            time.sleep(5)

@@ -1,5 +1,5 @@
 from typing import List, Dict, Tuple
-from config import config
+from config.config import config
 import re
 
 from dataclass.emoGGRound import EmoGGRound

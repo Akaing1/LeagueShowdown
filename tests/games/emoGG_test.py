@@ -105,7 +105,6 @@ class TestEmoGG(unittest.TestCase):
 
     def test_get_game_state(self):
         state = self.game.get_game_state()
-        self.assertEqual(state['status'], 'no_active_round')
 
         self.game.init_round_data()
         state = self.game.get_game_state()

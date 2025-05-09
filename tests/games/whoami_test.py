@@ -63,7 +63,7 @@ class TestWhoAmIGameLogic(unittest.TestCase):
         self.log_patcher.stop()
 
     def test_ezreal_round(self):
-        round_data = self.game.init_data()
+        round_data = self.game.init_round_data()
         self.assertEqual(round_data['champion'], "Ezreal")
 
         # Test hints
@@ -76,8 +76,8 @@ class TestWhoAmIGameLogic(unittest.TestCase):
         self.assertEqual(points, 100)
 
     def test_annie_round(self):
-        self.game.init_data()
-        self.game.init_data()
+        self.game.init_round_data()
+        self.game.init_round_data()
 
         self.assertEqual(self.game.reveal_hint(), "I can count to four!")
         self.assertEqual(self.game.reveal_hint(), "Fire is not my best friend")
@@ -87,7 +87,7 @@ class TestWhoAmIGameLogic(unittest.TestCase):
         self.assertEqual(points, 100)
 
     def test_hint_reveal_sequence(self):
-        self.game.init_data()
+        self.game.init_round_data()
         hints = [self.game.reveal_hint() for i in range(4)]
         self.assertEqual(hints, [
             "I never miss!",
@@ -101,7 +101,7 @@ class TestWhoAmIEdgeCases(unittest.TestCase):
     @patch('builtins.open', mock_open(read_data=TEST_FILE_CONTENT))
     def test_all_hints_revealed(self):
         game = WhoAmI()
-        game.init_data()
+        game.init_round_data()
         for i in range(4):
             game.reveal_hint()
         self.assertEqual(game.reveal_hint(), "No more hints available")

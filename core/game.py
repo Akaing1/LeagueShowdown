@@ -1,6 +1,6 @@
-from dataclasses import dataclass
+import time
 from typing import List, Dict, Tuple
-from config import config
+from config.config import config
 
 from games import EmoGG
 from games.whoami import WhoAmI
@@ -21,10 +21,35 @@ class GameShow:
         if gameIndex >= len(self.games):
             raise ValueError("No more games")
 
+        match gameIndex:
+            case 0:
+                logger.info(f"Running Who am I?")
+                self.runWhoAmI(gameIndex)
+            case 1:
+                logger.info(f"Running Emo-GG")
+                self.runEmoGG(gameIndex)
+            case 2:
+                logger.info(f"placeholder")
+            case 3:
+                logger.info(f"placeholder")
+            case _:
+                logger.info(f"No games left!")
+        return {}
 
+    def runWhoAmI(self, index: int):
+        game = self.games[index]
+        gameState = game.get_game_state()
 
+        for rounds in range(gameState['total_rounds']):
+            game.init_round_data()
+            while game.get_game_state()['remaining_hints']:
+                game.reveal_hint()
+                time.sleep(5)
 
+    def runEmoGG(self, index: int):
+        game = self.games[index]
+        gameState = game.get_game_state()
 
-
-
-
+        for rounds in range(gameState['total_rounds']):
+            game.init_round_data()
+            time.sleep(5)

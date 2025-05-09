@@ -1,6 +1,6 @@
-from dataclass.whoAmIHint import WhoAmIHint
+from src.dataclass.whoAmIHint import WhoAmIHint
 from typing import List, Dict, Tuple
-from config.config import config
+from src.config.config import config
 import re
 
 logger = config.setup_logger('whoami')

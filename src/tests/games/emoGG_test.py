@@ -1,6 +1,6 @@
 import unittest
 from unittest.mock import patch, mock_open
-from games.emogg import EmoGG, EmoGGRound
+from src.games.emogg import EmoGG, EmoGGRound
 
 
 class TestEmoGG(unittest.TestCase):

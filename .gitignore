@@ -1,4 +1,4 @@
-/resources/
+/src/resources/
 /.idea/
-/logs/
-/testfile.py
+/src/logs/
+/src/testfile.py

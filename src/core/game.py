@@ -1,10 +1,10 @@
 import time
-from typing import List, Dict, Tuple
-from config.config import config
+from typing import List, Dict
+from src.config.config import config
 
-from games import EmoGG
-from games.whoami import WhoAmI
-from dataclass.contestant import Contestant
+from src.games import EmoGG
+from src.games.whoami import WhoAmI
+from src.dataclass.contestant import Contestant
 
 logger = config.setup_logger('gameshow')
 

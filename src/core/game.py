@@ -1,10 +1,14 @@
 import time
-from typing import List, Dict
-from src.config.config import config
+from typing import List
+from threading import Event
 
 from src.games import EmoGG
 from src.games.whoami import WhoAmI
+
+from src.config.config import config
 from src.dataclass.contestant import Contestant
+from src.utilities.pause_util import GamePauseController
+from src.utilities.process_guess import ProcessGuess
 
 logger = config.setup_logger('gameshow')
 
@@ -12,15 +16,16 @@ logger = config.setup_logger('gameshow')
 class GameShow:
     def __init__(self, contestants: List[str]):
         self.contestants = [Contestant(name) for name in contestants]
-        self.games = [WhoAmI(), EmoGG()]
 
+        self.games = [WhoAmI(), EmoGG()]
         self.currentGameIndex = 0
+
+        self.pause_event = Event()
+        self.interval = 10
+
         logger.info(f"Initialized game show with {len(contestants)} contestants")
 
-    def start_game(self, gameIndex: int) -> Dict:
-        if gameIndex >= len(self.games):
-            raise ValueError("No more games")
-
+    def start_game(self, gameIndex: int) -> []:
         match gameIndex:
             case 0:
                 logger.info(f"Running Who am I?")
@@ -33,18 +38,25 @@ class GameShow:
             case 3:
                 logger.info(f"placeholder")
             case _:
-                logger.info(f"No games left!")
-        return {}
+                raise ValueError("No more games")
+        return self.contestants
 
     def runWhoAmI(self, index: int):
         game = self.games[index]
-        gameState = game.get_game_state()
+        game_state = game.get_game_state()
 
-        for rounds in range(gameState['total_rounds']):
+        for round_num in range(game_state['total_rounds']):
             game.init_round_data()
-            while game.get_game_state()['remaining_hints']:
+
+            for _ in range(4):
                 game.reveal_hint()
-                time.sleep(5)
+
+                ProcessGuess.process_guess(game, self.interval)
+
+                time.sleep(self.interval)
+
+            if round_num < game_state['total_rounds'] - 1:
+                GamePauseController.wait_for_space("Press SPACE for next round...")
 
     def runEmoGG(self, index: int):
         game = self.games[index]

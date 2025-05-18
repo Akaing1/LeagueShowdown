@@ -3,7 +3,7 @@ from typing import List
 from threading import Event
 
 from src.games import EmoGG
-from src.games.whoami import WhoAmI
+from src.games.who_am_i import WhoAmI
 
 from src.config.config import config
 from src.dataclass.contestant import Contestant
@@ -21,7 +21,7 @@ class GameShow:
         self.currentGameIndex = 0
 
         self.pause_event = Event()
-        self.interval = 10
+        self.interval = 4
 
         logger.info(f"Initialized game show with {len(contestants)} contestants")
 
@@ -48,11 +48,16 @@ class GameShow:
         for round_num in range(game_state['total_rounds']):
             game.init_round_data()
 
+            self.interval = 10
+
             for _ in range(4):
                 game.reveal_hint()
 
-                ProcessGuess.process_guess(game, self.interval)
+                correct_guess, points = ProcessGuess.process_guess(game, self.interval)
 
+                if correct_guess:
+                    self.interval = 0
+                    logger.info("Here are the rest of the hints...")
                 time.sleep(self.interval)
 
             if round_num < game_state['total_rounds'] - 1:

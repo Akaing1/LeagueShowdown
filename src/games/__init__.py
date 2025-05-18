@@ -1,4 +1,4 @@
-from .whoami import WhoAmI
+from .who_am_i import WhoAmI
 from .emogg import EmoGG
 # from .lolsketch import LOLSketch
 # from .splashzone import SplashZone

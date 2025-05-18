@@ -1,4 +1,4 @@
-from src.dataclass.whoAmIHint import WhoAmIHint
+from src.dataclass.who_am_I_hint import WhoAmIHint
 from typing import List, Dict, Tuple
 from src.config.config import config
 import re

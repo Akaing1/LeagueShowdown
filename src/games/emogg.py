@@ -2,7 +2,7 @@ from typing import List, Dict, Tuple
 from src.config.config import config
 import re
 
-from src.dataclass.emoGGRound import EmoGGRound
+from src.dataclass.emogg_round import EmoGGRound
 
 logger = config.setup_logger('emogg')
 

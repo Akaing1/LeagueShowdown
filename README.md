@@ -1,61 +1,100 @@
-# League of Legends Game Show  
-*A thrilling 3-contestant competition featuring 4 LoL-themed mini-games!*  
+# League Showdown
 
----
+A League of Legends game show for **three contestants and one host**, built with Python/FastAPI and React/TypeScript. Version **0.1.0** implements the first playable game, **Who Am I?**
 
-## 🎮 **Game Show Overview**  
-**Contestants:** 3 players compete across 4 rounds  
-**Theme:** League of Legends knowledge and creativity   
-**Scoring:** Cumulative points across all games  
+| Game | Status |
+| --- | --- |
+| Who Am I? | Playable |
+| Splash Zone | Planned |
+| EmoGG | Planned |
+| ScribbLoL | Planned |
 
----
+## Run locally
 
-## 🏆 **Game Lineup**  
-Games are played in this order:  
+Requires Python 3.12+ and Node.js 22.12+ (Node 24 is used in CI).
 
-### 1. **Who Am I?** *(Champion Guessing from hints)*  
-- **Objective:** Guess the champion from escalating hints  
-- **Format:**  
-  - 4 hints per champion (easiest → hardest)  
-  - Buzz in to guess
-  - If a contestant guesses wrong, they are out until everyone takes a turn 
-- **Scoring:**  
-  - Correct guess: +100 pts  
-  - Wrong guess: -100 pts  
+```bash
+python -m venv .venv
+source .venv/bin/activate
+python -m pip install -e '.[dev]'
+cp .env.example .env
+# Edit .env and choose a private SHOWDOWN_HOST_PASSWORD (at least 16 characters).
+npm ci --prefix frontend
+npm run build --prefix frontend
+python -m uvicorn app.main:app --app-dir backend --env-file .env --host 127.0.0.1 --port 8008
+```
 
-### 2. **ScribbLoL** *(Pictionary-Style Drawing)*  
-- **Objective:** Draw LoL-themed prompts for contestants to guess  
-- **Format:**  
-  - 90 seconds per turn  
-  - Prompts include champion abilities only  
-- **Scoring:**  
-  - Correct guess: +100 pts (team)  
-  - Artist bonus: +25 pts per correct guess  
+Open **http://localhost:8008**. Sign in as host, enter three names, and create a showdown. Use **Contestant & broadcast links** to copy each contestant's link. Contestants need only a browser; voice/video can stay in Discord and OBS.
 
-### 3. **Splash-Zone** *(Champion Skin Identification)*  
-- **Objective:** Name the champion skin from cropped splash art  
-- **Format:**    
-  - Picture will zoom out until the first contestant guesses the champion skin correctly
-  - Contestants MUST guess the FULL NAME of the champion skin
-  - If a contestant guesses wrong, they are out until everyone takes a turn  
-- **Scoring:**  
-  - Easy: +200 pts    
-  - Wrong: -100 pts  
+For frontend development, run the backend above and `npm run dev --prefix frontend` in another terminal. Open **http://localhost:5173**; Vite proxies API and WebSocket traffic to port 8008. Keep all participants on the same origin.
 
-### 4. **Emo-GG** *(Emoji Puzzles)*  
-- **Objective:** Decipher champions/items from emoji sequences  
-- **Format:**  
-  - 10 rounds (e.g., `♾️ ⚔️` = *Infinity Edge*)  
-  - Reveal emojis one-by-one  
-- **Scoring:**  
-  - Correct: +200 pts  
-  - Wrong: -100 pts  
+For remote contestants, put the application behind HTTPS with WebSocket proxy support, set `SHOWDOWN_SECURE_COOKIE=1`, and use that public origin for all links. The local URL is only accessible on your own computer. Run **one backend worker/process** for this version; live rooms and connections are coordinated in that process. Back up the SQLite database in `data/`.
 
----
+## Play Who Am I?
 
-## 📊 **Winning Criteria**  
-- Highest cumulative score after all 4 games  
-- Tiebreaker: TBD 
+1. **Start Who Am I?** reveals the first clue. The host can see the champion and all clues privately.
+2. **Open buzzers** lets eligible contestants buzz. The first eligible request received by the server wins; Internet latency can affect close races.
+3. The contestant has **15 seconds** to submit a champion name or answer aloud. The host judges using **Correct** or **Incorrect**. A typed answer stops the timer while awaiting judgment; the host may also judge a spoken answer before the timer expires.
+4. Correct answers earn **300 / 200 / 100** points after the first / second / third clue in the default pack. A wrong answer or expired answer timer costs **100 points**. Negative totals are allowed.
+5. After a wrong answer, that contestant is locked until the **next clue**. Reopen buzzers for the other contestants or reveal another clue. At the last clue, reveal the answer if nobody gets it.
+6. A correct answer reveals the champion to everyone. **Reveal answer / skip** ends an unanswered question without adding a penalty to contestants who did not answer. Advance with **Next champion**.
+7. After the last champion, choose **Finish showdown**. The highest score wins; tied leaders are shown as a tie. A tiebreaker is not implemented yet.
 
----
-  
+The host can **pause/resume**, **adjust scores**, or **undo** up to 30 actions. Undo restores the previous state and pauses an active round so the host can review it before resuming. Restoring an answering turn gives that contestant a fresh 15 seconds. Undo cannot make contestants forget a champion that was already revealed.
+
+## Screens and access
+
+- `/` — password-protected host sign-in, show creation, and saved shows.
+- `/host/{room}` — host console with answer key, judging, links, scores, and recovery controls.
+- `/play/{room}#{private-key}` — a private seat for one contestant. The key is removed from the address bar and saved in that tab's session storage to survive refresh. Reopen the original link to restore a seat in a new tab/browser.
+- `/show/{room}` — public broadcast view for an OBS browser source, typically at **1920 × 1080**. It explicitly requests public data even if the same browser is signed in as host.
+
+Keep seat links private: anyone with a link can act as that contestant. The broadcast link is read-only and anyone with that link can view the show. Do not capture your host console on stream.
+
+The server owns scores, timer deadlines, buzzer decisions, and round progression. It sends only revealed clues to contestants and the audience, and sends typed submissions only to the host and their author. Mutations require a current state revision and deduplicate accepted command IDs. Rooms, invites, scores, question packs, and undo history are saved transactionally in SQLite. Refresh/reconnect retrieves the current state. An unpaused answer timer continues across a server restart and expires when the server recovers; pause before planned downtime.
+
+## Question packs
+
+Six sample League questions are included in `backend/app/questions.json`. Before hosting a full episode, review the clues and prepare a fresh pack. Built-in questions are source-visible rehearsal content; private episode packs should be kept outside the repository.
+
+Set `SHOWDOWN_QUESTIONS` in `.env` to an absolute path to a JSON file with 1–100 questions:
+
+```json
+[
+  {
+    "answer": "Ahri",
+    "hints": ["A subtle clue", "A clearer clue", "An obvious clue"],
+    "points": [300, 200, 100]
+  }
+]
+```
+
+Each question supports 1–6 clues with one point value per clue. Packs are validated at startup and copied into each new show; changing the pack affects newly created shows after restarting the backend. There is no browser question editor yet.
+
+## Checks
+
+```bash
+python -m pytest -q
+python -m ruff check backend
+python -m ruff format --check backend
+npm run build --prefix frontend
+cd frontend
+npx playwright install chromium
+npm run test:e2e
+```
+
+The browser test builds and starts its own test server when port 8008 is available, then exercises a host, three isolated contestant sessions, and a broadcast page sharing the host's cookies. It checks private answers, scoring, lockouts, undo, refresh recovery, and mobile overflow. Stop any regular server on port 8008 first; local tests may reuse an existing server and expect the test password. Screenshots are written into Playwright's ignored `test-results/` directory.
+
+CI runs the backend tests and lint checks, the TypeScript/production build, and the browser test. Test credentials apply only to the isolated CI/test server.
+
+## Project layout
+
+- `backend/app/engine.py` — game rules and role-specific state projections.
+- `backend/app/main.py` — authentication, APIs, WebSocket updates, timers, and static frontend hosting.
+- `backend/app/store.py` — SQLite room persistence.
+- `frontend/src/` — React host, contestant, and broadcast views.
+- `legacy/` — original prototype preserved for reference; not part of the running application.
+
+Splash Zone, EmoGG, and ScribbLoL will reuse the room, authentication, scores, and live-screen foundation. They do not have playable implementations in the new application yet.
+
+This is an independent community project and is not endorsed by Riot Games.

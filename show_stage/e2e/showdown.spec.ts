@@ -38,6 +38,18 @@ test("host runs a round with three private contestants and a safe broadcast view
   await broadcast.goto(page.url().replace("/host/", "/show/"));
   await expect(broadcast.locator(".connection")).toHaveText("Connected");
   await expect(broadcast.getByText("HOST ONLY")).toHaveCount(0);
+  await broadcast
+    .getByRole("button", { name: "Fullscreen", exact: true })
+    .click();
+  await expect
+    .poll(() => broadcast.evaluate(() => Boolean(document.fullscreenElement)))
+    .toBe(true);
+  await broadcast
+    .getByRole("button", { name: "Exit fullscreen", exact: true })
+    .click();
+  await expect
+    .poll(() => broadcast.evaluate(() => Boolean(document.fullscreenElement)))
+    .toBe(false);
   await page.getByRole("button", { name: "Start Who Am I?" }).click();
   await expect(page.locator(".host-answer strong")).toHaveText("Ahri");
   for (const player of [...players, broadcast]) {
@@ -47,7 +59,9 @@ test("host runs a round with three private contestants and a safe broadcast view
       player.getByText("My tails are hard to miss.", { exact: true }),
     ).toHaveCount(0);
   }
-  await page.getByRole("button", { name: "Open buzzers", exact: true }).click();
+  await expect(
+    players[0].getByRole("button", { name: "BUZZ IN", exact: true }),
+  ).toBeEnabled();
   await players[0]
     .getByRole("button", { name: "BUZZ IN", exact: true })
     .click();

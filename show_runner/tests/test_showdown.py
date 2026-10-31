@@ -77,7 +77,7 @@ def test_full_game_and_private_projections(client):
     assert command(client, s, "open", token=tokens[0]).status_code == 400
     assert command(client, s, "buzz", token="invalid").status_code == 403
     client.post("/api/login", json={"password": PASSWORD})
-    s = command(client, get_host(client, s), "open").json()
+    s = get_host(client, s)
     s = command(client, s, "buzz", token=tokens[0]).json()
     assert s["active"] == "0" and "answer" not in s
     # The losing near-simultaneous buzz never takes over or changes scores.
@@ -110,7 +110,6 @@ def test_lockouts_clue_values_and_duplicate_scoring(client):
     s = room(client)
     token = s["invites"][0]
     s = command(client, s, "start").json()
-    s = command(client, s, "open").json()
     s = command(client, s, "buzz", token=token).json()
     command_id = str(uuid.uuid4())
     old = deepcopy(s)
@@ -136,7 +135,6 @@ def test_undo_and_persistence(tmp_path):
         s = room(client)
         token = s["invites"][0]
         s = command(client, s, "start").json()
-        s = command(client, s, "open").json()
         s = command(client, s, "buzz", token=token).json()
         s = command(client, s, "judge", {"correct": True}).json()
         s = command(client, s, "undo").json()
@@ -189,7 +187,6 @@ def test_cross_origin_mutations_blocked(client):
 def test_timer_pause_and_timeout():
     s = engine.new_game(["A", "B", "C"], QUESTIONS)
     engine.apply(s, "start", "host", {}, now=100)
-    engine.apply(s, "open", "host", {}, now=100)
     engine.apply(s, "buzz", "0", {}, now=100)
     engine.apply(s, "pause", "host", {}, now=105)
     assert s["remaining"] == 10 and not engine.expire(s, now=200)
@@ -204,7 +201,6 @@ def test_timer_pause_and_timeout():
 def test_expired_answer_cannot_be_judged_or_submitted(client):
     s = room(client)
     s = command(client, s, "start").json()
-    s = command(client, s, "open").json()
     s = command(client, s, "buzz", token=s["invites"][0]).json()
     # Force the persisted server deadline into the past without sleeping.
     server_room = client.app.state.rooms[s["room_id"]]
@@ -235,3 +231,12 @@ def test_invalid_question_pack_fails_at_startup(tmp_path):
         TestClient(create_app(tmp_path / "bad.sqlite3", PASSWORD, invalid)),
     ):
         pass
+
+
+def test_every_champion_starts_with_open_buzzers(client):
+    s = room(client)
+    s = command(client, s, "start").json()
+    assert s["phase"] == "open"
+    s = command(client, s, "reveal").json()
+    s = command(client, s, "next").json()
+    assert s["phase"] == "open" and s["index"] == 1

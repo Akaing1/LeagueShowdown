@@ -100,7 +100,7 @@ def create_app(db_path=None, password=None, questions=None):
                         await ws.close(code=1001)
             app.state.store.close()
 
-    app = FastAPI(title="League Showdown", version="0.1.0", lifespan=lifespan)
+    app = FastAPI(title="League Showdown", version="0.1.1", lifespan=lifespan)
 
     def valid_origin(origin, host):
         allowed = {f"http://{host}", f"https://{host}"}
@@ -207,7 +207,7 @@ def create_app(db_path=None, password=None, questions=None):
 
     @app.get("/api/health")
     def health():
-        return {"status": "ok", "version": "0.1.0"}
+        return {"status": "ok", "version": "0.1.1"}
 
     @app.post("/api/login")
     async def login(body: Login, request: Request, response: Response):
@@ -358,7 +358,7 @@ def create_app(db_path=None, password=None, questions=None):
                     app.state.clients.get(room_id, {}).pop(ws, None)
                     await broadcast(app.state.rooms[room_id])
 
-    dist = Path(__file__).resolve().parents[2] / "frontend" / "dist"
+    dist = Path(__file__).resolve().parents[2] / "show_stage" / "dist"
     if dist.exists():
         app.mount("/assets", StaticFiles(directory=dist / "assets"), name="assets")
 

@@ -82,7 +82,7 @@ def apply(state, action, actor, payload, now=None):
         state.update(
             index=index,
             revealed=1,
-            phase="clue",
+            phase="open",
             active=None,
             locked=[],
             submission=None,

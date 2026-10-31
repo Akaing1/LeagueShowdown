@@ -9,6 +9,7 @@ import {
   useParams,
 } from "react-router-dom";
 import "./style.css";
+import { FullscreenButton } from "./FullscreenButton";
 
 type Player = { id: string; name: string; score: number };
 type Show = {
@@ -422,6 +423,7 @@ function ShowPage({ mode }: { mode: "host" | "play" | "show" }) {
   return (
     <div className={`show-page ${mode}`}>
       <Header>
+        <FullscreenButton />
         <span className={`connection ${connected ? "live" : ""}`}>
           {connected ? "Connected" : "Reconnecting…"}
         </span>

@@ -783,3 +783,29 @@ footer {
     transition: none !important;
   }
 }
+.fullscreen-control {
+  position: relative;
+}
+.fullscreen-control button {
+  font-size: 12px;
+  padding: 8px 12px;
+  white-space: nowrap;
+}
+.fullscreen-control [role="alert"] {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  z-index: 5;
+  width: 240px;
+  background: #172d39;
+  padding: 12px;
+  font-size: 12px;
+}
+@media (max-width: 600px) {
+  .show-page header {
+    flex-wrap: wrap;
+  }
+  .show-page .header-right {
+    margin-left: auto;
+  }
+}

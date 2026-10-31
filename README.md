@@ -1,6 +1,6 @@
 # League Showdown
 
-A League of Legends game show for **three contestants and one host**, built with Python/FastAPI and React/TypeScript. Version **0.1.0** implements the first playable game, **Who Am I?**
+A League of Legends game show for **three contestants and one host**, built with Python/FastAPI and React/TypeScript. Version **0.1.1** implements the first playable game, **Who Am I?**
 
 | Game | Status |
 | --- | --- |
@@ -19,21 +19,21 @@ source .venv/bin/activate
 python -m pip install -e '.[dev]'
 cp .env.example .env
 # Edit .env and choose a private SHOWDOWN_HOST_PASSWORD (at least 16 characters).
-npm ci --prefix frontend
-npm run build --prefix frontend
-python -m uvicorn app.main:app --app-dir backend --env-file .env --host 127.0.0.1 --port 8008
+npm ci --prefix show_stage
+npm run build --prefix show_stage
+python -m uvicorn app.main:app --app-dir show_runner --env-file .env --host 127.0.0.1 --port 8008
 ```
 
 Open **http://localhost:8008**. Sign in as host, enter three names, and create a showdown. Use **Contestant & broadcast links** to copy each contestant's link. Contestants need only a browser; voice/video can stay in Discord and OBS.
 
-For frontend development, run the backend above and `npm run dev --prefix frontend` in another terminal. Open **http://localhost:5173**; Vite proxies API and WebSocket traffic to port 8008. Keep all participants on the same origin.
+For frontend development, run the backend above and `npm run dev --prefix show_stage` in another terminal. Open **http://localhost:5173**; Vite proxies API and WebSocket traffic to port 8008. Keep all participants on the same origin.
 
 For remote contestants, put the application behind HTTPS with WebSocket proxy support, set `SHOWDOWN_SECURE_COOKIE=1`, and use that public origin for all links. The local URL is only accessible on your own computer. Run **one backend worker/process** for this version; live rooms and connections are coordinated in that process. Back up the SQLite database in `data/`.
 
 ## Play Who Am I?
 
-1. **Start Who Am I?** reveals the first clue. The host can see the champion and all clues privately.
-2. **Open buzzers** lets eligible contestants buzz. The first eligible request received by the server wins; Internet latency can affect close races.
+1. **Start Who Am I?** reveals the first clue and automatically opens the buzzers. The host can see the champion and all clues privately.
+2. Every new champion round starts with buzzers open. **Open buzzers** can reopen them after a wrong answer or another clue. The first eligible request received by the server wins; Internet latency can affect close races.
 3. The contestant has **15 seconds** to submit a champion name or answer aloud. The host judges using **Correct** or **Incorrect**. A typed answer stops the timer while awaiting judgment; the host may also judge a spoken answer before the timer expires.
 4. Correct answers earn **300 / 200 / 100** points after the first / second / third clue in the default pack. A wrong answer or expired answer timer costs **100 points**. Negative totals are allowed.
 5. After a wrong answer, that contestant is locked until the **next clue**. Reopen buzzers for the other contestants or reveal another clue. At the last clue, reveal the answer if nobody gets it.
@@ -55,7 +55,7 @@ The server owns scores, timer deadlines, buzzer decisions, and round progression
 
 ## Question packs
 
-Six sample League questions are included in `backend/app/questions.json`. Before hosting a full episode, review the clues and prepare a fresh pack. Built-in questions are source-visible rehearsal content; private episode packs should be kept outside the repository.
+Six sample League questions are included in `show_runner/app/questions.json`. Before hosting a full episode, review the clues and prepare a fresh pack. Built-in questions are source-visible rehearsal content; private episode packs should be kept outside the repository.
 
 Set `SHOWDOWN_QUESTIONS` in `.env` to an absolute path to a JSON file with 1–100 questions:
 
@@ -75,10 +75,10 @@ Each question supports 1–6 clues with one point value per clue. Packs are vali
 
 ```bash
 python -m pytest -q
-python -m ruff check backend
-python -m ruff format --check backend
-npm run build --prefix frontend
-cd frontend
+python -m ruff check show_runner
+python -m ruff format --check show_runner
+npm run build --prefix show_stage
+cd show_stage
 npx playwright install chromium
 npm run test:e2e
 ```
@@ -89,12 +89,14 @@ CI runs the backend tests and lint checks, the TypeScript/production build, and 
 
 ## Project layout
 
-- `backend/app/engine.py` — game rules and role-specific state projections.
-- `backend/app/main.py` — authentication, APIs, WebSocket updates, timers, and static frontend hosting.
-- `backend/app/store.py` — SQLite room persistence.
-- `frontend/src/` — React host, contestant, and broadcast views.
+- `show_runner/app/engine.py` — game rules and role-specific state projections.
+- `show_runner/app/main.py` — authentication, APIs, WebSocket updates, timers, and static frontend hosting.
+- `show_runner/app/store.py` — SQLite room persistence.
+- `show_stage/src/` — React host, contestant, and broadcast views.
 - `legacy/` — original prototype preserved for reference; not part of the running application.
 
 Splash Zone, EmoGG, and ScribbLoL will reuse the room, authentication, scores, and live-screen foundation. They do not have playable implementations in the new application yet.
 
 This is an independent community project and is not endorsed by Riot Games.
+
+Use **Fullscreen** in the game header on host, contestant, or broadcast screens. Use **Exit fullscreen** or Escape to leave. For OBS browser sources, use the broadcast link directly at your chosen resolution.

@@ -14,7 +14,7 @@ export default defineConfig({
   },
   webServer: {
     command:
-      "npm run build && python -m uvicorn app.main:app --app-dir ../backend --port 8008",
+      "npm run build && python -m uvicorn app.main:app --app-dir ../show_runner --port 8008",
     url: "http://127.0.0.1:8008/api/health",
     reuseExistingServer: !process.env.CI,
     env: {

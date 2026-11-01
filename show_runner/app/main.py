@@ -100,7 +100,7 @@ def create_app(db_path=None, password=None, questions=None):
                         await ws.close(code=1001)
             app.state.store.close()
 
-    app = FastAPI(title="League Showdown", version="0.1.1", lifespan=lifespan)
+    app = FastAPI(title="Rats on the Rift", version="0.1.1", lifespan=lifespan)
 
     def valid_origin(origin, host):
         allowed = {f"http://{host}", f"https://{host}"}

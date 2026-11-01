@@ -65,10 +65,10 @@ async function api(path: string, options: RequestInit = {}) {
 function Brand() {
   return (
     <Link to="/" className="brand">
-      <span className="crest">L</span>
+      <span className="crest">R</span>
       <span className="brand-copy">
         <span>
-          LEAGUE <b>SHOWDOWN</b>
+          RATS ON <b>THE RIFT</b>
         </span>
         <span className="edition">LEAGUE OF LEGENDS EDITION</span>
       </span>
@@ -436,7 +436,7 @@ function ShowPage({ mode }: { mode: "host" | "play" | "show" }) {
                 ? "HOST CONSOLE"
                 : player
                   ? `CONTESTANT · ${player.name}`
-                  : "LEAGUE SHOWDOWN"}
+                  : "RATS ON THE RIFT"}
             </div>
             <h1>
               Who Am I<span>?</span>

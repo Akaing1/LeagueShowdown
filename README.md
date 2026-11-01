@@ -1,4 +1,4 @@
-# League Showdown
+# Rats on the Rift
 
 A League of Legends game show for **three contestants and one host**, built with Python/FastAPI and React/TypeScript. Version **0.1.1** implements the first playable game, **Who Am I?**
 

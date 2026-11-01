@@ -55,7 +55,7 @@ The server owns scores, timer deadlines, buzzer decisions, and round progression
 
 ## Question packs
 
-Eight sample League questions are included in `show_runner/app/questions.json`. Before hosting a full episode, review the clues and prepare a fresh pack. Built-in questions are source-visible rehearsal content; private episode packs should be kept outside the repository.
+Eight sample League questions are included in `show_runner/app/content/who_am_i/default.json`. Before hosting a full episode, review the clues and prepare a fresh pack. Built-in questions are source-visible rehearsal content; private episode packs should be kept outside the repository.
 
 Set `SHOWDOWN_QUESTIONS` in `.env` to an absolute path to a JSON file with 1–100 questions:
 
@@ -89,11 +89,23 @@ CI runs the backend tests and lint checks, the TypeScript/production build, and 
 
 ## Project layout
 
-- `show_runner/app/engine.py` — game rules and role-specific state projections.
-- `show_runner/app/main.py` — authentication, APIs, WebSocket updates, timers, and static frontend hosting.
-- `show_runner/app/store.py` — SQLite room persistence.
-- `show_stage/src/` — React host, contestant, and broadcast views.
-- `legacy/` — original prototype preserved for reference; not part of the running application.
+- `show_runner/app/main.py` — application composition and startup/shutdown.
+- `show_runner/app/api/` — HTTP routes, WebSocket connections, security middleware, and frontend serving.
+- `show_runner/app/services/` — authentication, room commands, timers, and broadcasts.
+- `show_runner/app/models/` — validated request and question schemas.
+- `show_runner/app/games/who_am_i/` — game rules and role-specific projections.
+- `show_runner/app/storage/` — SQLite persistence.
+- `show_runner/app/content/who_am_i/` — bundled question packs.
+- `show_runner/tests/` — API, game-rule, and storage tests with shared fixtures.
+- `show_stage/src/app/` and `pages/` — routing and screen composition.
+- `show_stage/src/components/` — shared layout, controls, and show components.
+- `show_stage/src/games/who_am_i/` — clue cards and host/contestant controls.
+- `show_stage/src/hooks/`, `api/`, and `types/` — live room state, HTTP client, and TypeScript contracts.
+- `show_stage/src/styles/` — theme and show stylesheets.
+- `show_stage/tests/e2e/` — browser integration tests.
+- `docs/architecture.md` — ownership boundaries and extension guidance.
+
+The original prototype has been removed; its source remains available in Git history.
 
 Splash Zone, EmoGG, and ScribbLoL will reuse the room, authentication, scores, and live-screen foundation. They do not have playable implementations in the new application yet.
 

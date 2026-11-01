@@ -26,4 +26,4 @@ where = ["show_runner"]
 include = ["app*"]
 
 [tool.setuptools.package-data]
-app = ["questions.json"]
+app = ["content/who_am_i/*.json"]

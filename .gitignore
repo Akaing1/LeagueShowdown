@@ -13,3 +13,4 @@ logs/
 playwright-report/
 test-results/
 *.egg-info/
+build/

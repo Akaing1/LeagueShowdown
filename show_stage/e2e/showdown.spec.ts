@@ -53,11 +53,16 @@ test("host runs a round with three private contestants and a safe broadcast view
   await page.getByRole("button", { name: "Start Who Am I?" }).click();
   await expect(page.locator(".host-answer strong")).toHaveText("Ezreal");
   for (const player of [...players, broadcast]) {
-    await expect(player.locator(".clue").first()).toContainText("memories");
+    await expect(player.locator(".clue").first()).toContainText("I never miss!");
     await expect(player.getByText("Ezreal", { exact: true })).toHaveCount(0);
-    await expect(
-      player.getByText("My tails are hard to miss.", { exact: true }),
-    ).toHaveCount(0);
+    await expect(player.locator(".clue")).toHaveCount(4);
+    for (const hint of [
+      "I love double rainbows",
+      "Your museum is not safe with me",
+      "Twinkies",
+    ]) {
+      await expect(player.getByText(hint, { exact: true })).toHaveCount(0);
+    }
   }
   await expect(
     players[0].getByRole("button", { name: "BUZZ IN", exact: true }),

@@ -91,6 +91,11 @@ header {
   font-size: 16px;
   color: #e8eff2;
 }
+.brand-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
 .brand b {
   color: var(--gold);
   font-weight: 800;
@@ -103,9 +108,12 @@ header {
   place-items: center;
   color: var(--gold);
   font: italic 28px Georgia;
-  clip-path: polygon(0 0, 100% 0, 100% 80%, 50% 100%, 0 80%);
+  flex-shrink: 0;
 }
 .header-right {
+  margin-left: auto;
+  justify-content: flex-end;
+  flex-wrap: wrap;
   display: flex;
   align-items: center;
   gap: 24px;
@@ -666,9 +674,6 @@ footer {
   .player-number {
     display: none;
   }
-  .edition {
-    display: none;
-  }
 }
 @media (max-width: 800px) {
   .host .game-layout {
@@ -695,6 +700,10 @@ footer {
   }
   .header-right {
     gap: 8px;
+  }
+  .edition {
+    font-size: 8px;
+    letter-spacing: 1px;
   }
   .brand {
     font-size: 12px;
@@ -802,7 +811,7 @@ footer {
   font-size: 12px;
 }
 @media (max-width: 600px) {
-  .show-page header {
+  header {
     flex-wrap: wrap;
   }
   .show-page .header-right {

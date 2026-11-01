@@ -66,8 +66,11 @@ function Brand() {
   return (
     <Link to="/" className="brand">
       <span className="crest">L</span>
-      <span>
-        LEAGUE <b>SHOWDOWN</b>
+      <span className="brand-copy">
+        <span>
+          LEAGUE <b>SHOWDOWN</b>
+        </span>
+        <span className="edition">LEAGUE OF LEGENDS EDITION</span>
       </span>
     </Link>
   );
@@ -76,10 +79,7 @@ function Header({ children }: { children?: React.ReactNode }) {
   return (
     <header>
       <Brand />
-      <div className="header-right">
-        {children}
-        <span className="edition">LEAGUE OF LEGENDS EDITION</span>
-      </div>
+      <div className="header-right">{children}</div>
     </header>
   );
 }

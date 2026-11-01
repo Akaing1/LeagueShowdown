@@ -3,7 +3,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 
 export default defineConfig({
-  testDir: "./e2e",
+  testDir: "./tests/e2e",
   workers: 1,
   use: {
     baseURL: "http://127.0.0.1:8008",

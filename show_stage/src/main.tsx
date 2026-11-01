@@ -579,7 +579,7 @@ function ShowPage({ mode }: { mode: "host" | "play" | "show" }) {
                         onClick={() => void act("buzz")}
                       >
                         {s.locked.includes(s.you)
-                          ? "Wait for the next clue"
+                          ? "Wait for the next question"
                           : canBuzz
                             ? "BUZZ IN"
                             : "Stand by"}
@@ -605,7 +605,7 @@ function ShowPage({ mode }: { mode: "host" | "play" | "show" }) {
                       {s.active === p.id
                         ? "ANSWERING"
                         : s.locked.includes(p.id)
-                          ? "LOCKED UNTIL NEXT CLUE"
+                          ? "LOCKED UNTIL NEXT QUESTION"
                           : s.online.includes(p.id)
                             ? "CONNECTED"
                             : "DISCONNECTED"}

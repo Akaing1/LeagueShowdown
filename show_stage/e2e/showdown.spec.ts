@@ -53,7 +53,9 @@ test("host runs a round with three private contestants and a safe broadcast view
   await page.getByRole("button", { name: "Start Who Am I?" }).click();
   await expect(page.locator(".host-answer strong")).toHaveText("Ezreal");
   for (const player of [...players, broadcast]) {
-    await expect(player.locator(".clue").first()).toContainText("I never miss!");
+    await expect(player.locator(".clue").first()).toContainText(
+      "I never miss!",
+    );
     await expect(player.getByText("Ezreal", { exact: true })).toHaveCount(0);
     await expect(player.locator(".clue")).toHaveCount(4);
     for (const hint of [
@@ -80,13 +82,18 @@ test("host runs a round with three private contestants and a safe broadcast view
   await expect(broadcast.getByText("Garen", { exact: true })).toHaveCount(0);
   await page.getByRole("button", { name: "Incorrect", exact: false }).click();
   await expect(
-    players[0].getByRole("button", { name: "Wait for the next clue" }),
+    players[0].getByRole("button", { name: "Wait for the next question" }),
   ).toBeDisabled();
   await expect(
     page.locator(".score-card").first().locator(".score"),
   ).toContainText("-100");
+  await expect(
+    players[1].getByRole("button", { name: "BUZZ IN", exact: true }),
+  ).toBeEnabled();
   await page.getByRole("button", { name: "Reveal next clue" }).click();
-  await page.getByRole("button", { name: "Open buzzers", exact: true }).click();
+  await expect(
+    players[0].getByRole("button", { name: "Wait for the next question" }),
+  ).toBeDisabled();
   await players[1]
     .getByRole("button", { name: "BUZZ IN", exact: true })
     .click();

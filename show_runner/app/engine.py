@@ -51,7 +51,12 @@ def wrong(state, reason):
         "reason": reason,
     }
     state["locked"].append(state["active"])
-    state.update(active=None, submission=None, deadline=None, phase="clue")
+    state.update(
+        active=None,
+        submission=None,
+        deadline=None,
+        phase="open" if len(state["locked"]) < len(state["players"]) else "clue",
+    )
 
 
 def expire(state, now=None):
@@ -94,16 +99,15 @@ def apply(state, action, actor, payload, now=None):
         require(state["phase"] in {"clue", "open"}, "Cannot reveal a clue now")
         require(state["revealed"] < len(q["hints"]), "All clues are already visible")
         state["revealed"] += 1
-        # A new clue gives everyone another attempt; a wrong guess stays locked until then.
-        state.update(phase="clue", locked=[])
+        # Clues preserve round-long lockouts and the current buzzer state.
     elif action == "open":
         require(state["phase"] == "clue", "Buzzers cannot open now")
-        require(len(state["locked"]) < 3, "Reveal another clue or the answer")
+        require(len(state["locked"]) < 3, "Reveal the answer to move to the next question")
         state["phase"] = "open"
     elif action == "buzz":
         require(not host and actor in [p["id"] for p in state["players"]], "Contestant required")
         require(state["phase"] == "open", "Buzzers are closed")
-        require(actor not in state["locked"], "Wait for the next clue")
+        require(actor not in state["locked"], "Wait for the next question")
         state.update(
             phase="answering", active=actor, deadline=now + state["answer_seconds"], submission=None
         )

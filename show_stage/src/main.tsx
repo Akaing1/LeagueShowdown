@@ -505,8 +505,8 @@ function ShowPage({ mode }: { mode: "host" | "play" | "show" }) {
                   <div className="eyebrow">IDENTIFY THE CHAMPION</div>
                   {Array.from({ length: s.hint_count }, (_, i) => (
                     <div
-                      key={i}
-                      className={`clue ${i >= s.hints.length ? "concealed" : ""}`}
+                      key={`${s.index}-${i}-${i < s.hints.length}`}
+                      className={`clue ${i >= s.hints.length ? "concealed" : "clue-revealed"}`}
                     >
                       <span className="clue-number">0{i + 1}</span>
                       <p>{s.hints[i] || "Clue not yet revealed"}</p>

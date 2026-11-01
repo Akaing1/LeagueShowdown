@@ -818,3 +818,25 @@ footer {
     margin-left: auto;
   }
 }
+
+/* Rotate revealed cards vertically; round keys replay the first clue reveal. */
+.clue-revealed {
+  transform-origin: center;
+  backface-visibility: hidden;
+  animation: clue-flip 550ms ease-out both;
+}
+@keyframes clue-flip {
+  from {
+    transform: perspective(900px) rotateX(-90deg);
+    opacity: 0;
+  }
+  to {
+    transform: perspective(900px) rotateX(0deg);
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .clue-revealed {
+    animation: none;
+  }
+}

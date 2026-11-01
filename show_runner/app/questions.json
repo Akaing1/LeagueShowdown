@@ -1,8 +1,122 @@
 [
-  {"answer":"Ahri","hints":["I have a complicated relationship with the memories of others.","My heritage connects me to Ionia and the vastaya.","My tails are hard to miss."],"points":[300,200,100]},
-  {"answer":"Thresh","hints":["My collection is not made of ordinary treasures.","A lantern can offer an ally a way out.","I am known as the Chain Warden."],"points":[300,200,100]},
-  {"answer":"Braum","hints":["My reputation is built on protecting others.","I carry something that once served as a door.","I am the Heart of the Freljord."],"points":[300,200,100]},
-  {"answer":"Orianna","hints":["My father's craftsmanship changed the course of my life.","My movements follow a mechanical rhythm.","My ball is the center of my abilities."],"points":[300,200,100]},
-  {"answer":"Jhin","hints":["For me, violence is a performance.","Precision matters more than a large ammunition supply.","My favorite number is four."],"points":[300,200,100]},
-  {"answer":"Bard","hints":["My responsibilities extend beyond ordinary mortal concerns.","I can create a passage through terrain.","Chimes and meeps accompany my journey."],"points":[300,200,100]}
+  {
+    "answer": "Ezreal",
+    "hints": [
+      "I never miss!",
+      "I love double rainbows",
+      "Your museum is not safe with me",
+      "Twinkies"
+    ],
+    "points": [
+      200,
+      100,
+      100,
+      100
+    ]
+  },
+  {
+    "answer": "Annie",
+    "hints": [
+      "I can only count to four!",
+      "Fire is not my best friend",
+      "I am a little older than I can count",
+      "Have you seen my bear Tibbers?"
+    ],
+    "points": [
+      200,
+      100,
+      100,
+      100
+    ]
+  },
+  {
+    "answer": "Azir",
+    "hints": [
+      "The best dealer in the house",
+      "Julius Caesar in a different timeline",
+      "KFC",
+      "Glory to the empire!"
+    ],
+    "points": [
+      200,
+      100,
+      100,
+      100
+    ]
+  },
+  {
+    "answer": "Ivern",
+    "hints": [
+      "Guerilla Warfare",
+      "Daddy Long Legs",
+      "I lost my pet rock",
+      "The Lorax"
+    ],
+    "points": [
+      200,
+      100,
+      100,
+      100
+    ]
+  },
+  {
+    "answer": "Ahri",
+    "hints": [
+      "Some memories taste better than others.",
+      "A little charm goes a long way.",
+      "My orb always comes back.",
+      "Nine tails, one fox."
+    ],
+    "points": [
+      200,
+      100,
+      100,
+      100
+    ]
+  },
+  {
+    "answer": "Thresh",
+    "hints": [
+      "I collect what others leave behind.",
+      "My hook makes a terrible first impression.",
+      "Take the lantern!",
+      "The Chain Warden."
+    ],
+    "points": [
+      200,
+      100,
+      100,
+      100
+    ]
+  },
+  {
+    "answer": "Braum",
+    "hints": [
+      "A good heart is my greatest strength.",
+      "My shield used to be a door.",
+      "Even my moustache is legendary.",
+      "The Heart of the Freljord."
+    ],
+    "points": [
+      200,
+      100,
+      100,
+      100
+    ]
+  },
+  {
+    "answer": "Jhin",
+    "hints": [
+      "Every fight deserves an encore.",
+      "My audience rarely survives the performance.",
+      "Reloading is part of the choreography.",
+      "FOUR!"
+    ],
+    "points": [
+      200,
+      100,
+      100,
+      100
+    ]
+  }
 ]

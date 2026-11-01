@@ -240,3 +240,26 @@ def test_every_champion_starts_with_open_buzzers(client):
     s = command(client, s, "reveal").json()
     s = command(client, s, "next").json()
     assert s["phase"] == "open" and s["index"] == 1
+
+
+def test_default_pack_eight_rounds_and_four_hint_scoring():
+    import json
+    from pathlib import Path
+
+    pack = json.loads((Path(__file__).parents[1] / "app" / "questions.json").read_text())
+    assert len(pack) == 8
+    for hint_count in range(1, 5):
+        state = engine.new_game(["A", "B", "C"], pack)
+        for index in range(8):
+            engine.apply(state, "start" if index == 0 else "next", "host", {})
+            assert len(engine.question(state)["hints"]) == 4
+            for _ in range(hint_count - 1):
+                engine.apply(state, "hint", "host", {})
+            if hint_count > 1:
+                engine.apply(state, "open", "host", {})
+            engine.apply(state, "buzz", "0", {})
+            engine.apply(state, "judge", "host", {"correct": True})
+            expected = (index + 1) * (200 if hint_count == 1 else 100)
+            assert state["players"][0]["score"] == expected
+        engine.apply(state, "next", "host", {})
+        assert state["phase"] == "finished"

@@ -51,13 +51,18 @@ test("host runs a round with three private contestants and a safe broadcast view
     .poll(() => broadcast.evaluate(() => Boolean(document.fullscreenElement)))
     .toBe(false);
   await page.getByRole("button", { name: "Start Who Am I?" }).click();
-  await expect(page.locator(".host-answer strong")).toHaveText("Ahri");
+  await expect(page.locator(".host-answer strong")).toHaveText("Ezreal");
   for (const player of [...players, broadcast]) {
-    await expect(player.locator(".clue").first()).toContainText("memories");
-    await expect(player.getByText("Ahri", { exact: true })).toHaveCount(0);
-    await expect(
-      player.getByText("My tails are hard to miss.", { exact: true }),
-    ).toHaveCount(0);
+    await expect(player.locator(".clue").first()).toContainText("I never miss!");
+    await expect(player.getByText("Ezreal", { exact: true })).toHaveCount(0);
+    await expect(player.locator(".clue")).toHaveCount(4);
+    for (const hint of [
+      "I love double rainbows",
+      "Your museum is not safe with me",
+      "Twinkies",
+    ]) {
+      await expect(player.getByText(hint, { exact: true })).toHaveCount(0);
+    }
   }
   await expect(
     players[0].getByRole("button", { name: "BUZZ IN", exact: true }),
@@ -85,14 +90,14 @@ test("host runs a round with three private contestants and a safe broadcast view
   await players[1]
     .getByRole("button", { name: "BUZZ IN", exact: true })
     .click();
-  await players[1].getByLabel("Your answer").fill("Ahri");
+  await players[1].getByLabel("Your answer").fill("Ezreal");
   await players[1].getByRole("button", { name: "Lock in answer" }).click();
-  await expect(page.locator(".submitted strong")).toHaveText("Ahri");
+  await expect(page.locator(".submitted strong")).toHaveText("Ezreal");
   await page.getByRole("button", { name: "✓ Correct", exact: true }).click();
-  await expect(broadcast.locator(".answer-reveal h2")).toHaveText("Ahri");
+  await expect(broadcast.locator(".answer-reveal h2")).toHaveText("Ezreal");
   await expect(
     players[1].locator(".score-card").nth(1).locator(".score"),
-  ).toContainText("200");
+  ).toContainText("100");
   await page.getByRole("button", { name: "Undo last action" }).click();
   await expect(page.locator(".status")).toHaveText("Show paused");
   await expect(
@@ -105,7 +110,7 @@ test("host runs a round with three private contestants and a safe broadcast view
   await expect(players[1].locator(".connection")).toHaveText("Connected");
   await expect(
     players[1].locator(".score-card").nth(1).locator(".score"),
-  ).toContainText("200");
+  ).toContainText("100");
   await page.screenshot({
     path: testInfo.outputPath("host.png"),
     fullPage: true,

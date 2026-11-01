@@ -118,14 +118,15 @@ def test_lockouts_clue_values_and_duplicate_scoring(client):
     replay = command(client, old, "judge", {"correct": False}, command_id=command_id)
     assert replay.status_code == 200 and replay.json()["players"][0]["score"] == -100
     assert command(client, old, "judge", {"correct": False}).status_code == 409
-    s = command(client, s, "open").json()
+    assert s["phase"] == "open"
     assert command(client, s, "buzz", token=token).status_code == 400
     s = command(client, s, "hint").json()
-    assert s["points"] == 200 and not s["locked"]
-    s = command(client, s, "open").json()
-    s = command(client, s, "buzz", token=token).json()
+    assert s["points"] == 200 and s["locked"] == ["0"]
+    assert command(client, s, "buzz", token=token).status_code == 400
+    s = command(client, s, "buzz", token=s["invites"][1]).json()
     s = command(client, s, "judge", {"correct": True}).json()
-    assert s["players"][0]["score"] == 100
+    assert s["players"][0]["score"] == -100
+    assert s["players"][1]["score"] == 200
 
 
 def test_undo_and_persistence(tmp_path):
@@ -255,11 +256,33 @@ def test_default_pack_eight_rounds_and_four_hint_scoring():
             assert len(engine.question(state)["hints"]) == 4
             for _ in range(hint_count - 1):
                 engine.apply(state, "hint", "host", {})
-            if hint_count > 1:
-                engine.apply(state, "open", "host", {})
             engine.apply(state, "buzz", "0", {})
             engine.apply(state, "judge", "host", {"correct": True})
             expected = (index + 1) * (200 if hint_count == 1 else 100)
             assert state["players"][0]["score"] == expected
         engine.apply(state, "next", "host", {})
         assert state["phase"] == "finished"
+
+
+@pytest.mark.parametrize("timeout", [False, True])
+def test_round_lockouts_reopen_for_others_and_reset_on_next_question(timeout):
+    state = engine.new_game(["A", "B", "C"], QUESTIONS)
+    engine.apply(state, "start", "host", {})
+    for player in range(3):
+        engine.apply(state, "buzz", str(player), {}, now=0)
+        if timeout:
+            assert engine.expire(state, now=16)
+        else:
+            engine.apply(state, "judge", "host", {"correct": False})
+        assert state["locked"] == [str(i) for i in range(player + 1)]
+        assert state["phase"] == ("open" if player < 2 else "clue")
+        if player < 2:
+            engine.apply(state, "hint", "host", {})
+        with pytest.raises(engine.RuleError):
+            engine.apply(state, "buzz", str(player), {})
+    with pytest.raises(engine.RuleError):
+        engine.apply(state, "open", "host", {})
+    engine.apply(state, "reveal", "host", {})
+    engine.apply(state, "next", "host", {})
+    assert state["locked"] == [] and state["phase"] == "open"
+    engine.apply(state, "buzz", "0", {})

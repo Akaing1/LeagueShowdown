@@ -33,10 +33,10 @@ For remote contestants, put the application behind HTTPS with WebSocket proxy su
 ## Play Who Am I?
 
 1. **Start Who Am I?** reveals the first clue and automatically opens the buzzers. The host can see the champion and all clues privately.
-2. Every new champion round starts with buzzers open. **Open buzzers** can reopen them after a wrong answer or another clue. The first eligible request received by the server wins; Internet latency can affect close races.
+2. Every new champion round starts with buzzers open. Wrong answers and timeouts automatically reopen buzzers for eligible contestants. Revealing a clue keeps buzzers open. The first eligible request received by the server wins; Internet latency can affect close races.
 3. The contestant has **15 seconds** to submit a champion name or answer aloud. The host judges using **Correct** or **Incorrect**. A typed answer stops the timer while awaiting judgment; the host may also judge a spoken answer before the timer expires.
 4. Correct answers earn **200** points on the first clue and **100** points on any of the remaining three clues. The default pack contains **eight rounds**. A wrong answer or expired answer timer costs **100 points**. Negative totals are allowed.
-5. After a wrong answer, that contestant is locked until the **next clue**. Reopen buzzers for the other contestants or reveal another clue. At the last clue, reveal the answer if nobody gets it.
+5. After a wrong answer or timeout, only that contestant is locked until the **next question**. Additional clues do not reset lockouts. If all three contestants miss, reveal the answer and advance.
 6. A correct answer reveals the champion to everyone. **Reveal answer / skip** ends an unanswered question without adding a penalty to contestants who did not answer. Advance with **Next champion**.
 7. After the last champion, choose **Finish showdown**. The highest score wins; tied leaders are shown as a tie. A tiebreaker is not implemented yet.
 
@@ -55,7 +55,7 @@ The server owns scores, timer deadlines, buzzer decisions, and round progression
 
 ## Question packs
 
-Six sample League questions are included in `show_runner/app/questions.json`. Before hosting a full episode, review the clues and prepare a fresh pack. Built-in questions are source-visible rehearsal content; private episode packs should be kept outside the repository.
+Eight sample League questions are included in `show_runner/app/questions.json`. Before hosting a full episode, review the clues and prepare a fresh pack. Built-in questions are source-visible rehearsal content; private episode packs should be kept outside the repository.
 
 Set `SHOWDOWN_QUESTIONS` in `.env` to an absolute path to a JSON file with 1–100 questions:
 

@@ -60,3 +60,51 @@ def test_round_lockouts_reopen_for_others_and_reset_on_next_question(timeout):
     engine.apply(state, "next", "host", {})
     assert state["locked"] == [] and state["phase"] == "open"
     engine.apply(state, "buzz", "0", {})
+
+
+@pytest.mark.parametrize("timeout", [False, True])
+def test_buzzer_queue_promotes_in_order_with_fresh_timer(timeout):
+    s = engine.new_game(["A", "B", "C"], QUESTIONS)
+    engine.apply(s, "start", "host", {}, now=0)
+    engine.apply(s, "buzz", "0", {}, now=1)
+    engine.apply(s, "buzz", "2", {}, now=2)
+    engine.apply(s, "buzz", "1", {}, now=3)
+    assert s["active"] == "0" and s["queue"] == ["2", "1"] and s["deadline"] == 16
+    for actor in ["0", "1", "2"]:
+        with pytest.raises(engine.RuleError, match="Already buzzed"):
+            engine.apply(s, "buzz", actor, {}, now=4)
+    if timeout:
+        assert engine.expire(s, now=20)
+    else:
+        engine.apply(s, "submit_answer", "0", {"answer": "Wrong"}, now=4)
+        engine.apply(s, "judge", "host", {"correct": False}, now=20)
+    assert s["active"] == "2" and s["queue"] == ["1"] and s["deadline"] == 35
+    assert s["submission"] is None and s["locked"] == ["0"]
+    engine.apply(s, "judge", "host", {"correct": False}, now=21)
+    assert s["active"] == "1" and s["queue"] == [] and s["deadline"] == 36
+    engine.apply(s, "judge", "host", {"correct": False}, now=22)
+    assert s["active"] is None and s["phase"] == "clue"
+    engine.apply(s, "reveal", "host", {})
+    engine.apply(s, "next", "host", {})
+    assert s["locked"] == [] and s["queue"] == []
+
+
+def test_queue_during_judging_pause_correct_and_old_rooms():
+    s = engine.new_game(["A", "B", "C"], QUESTIONS)
+    del s["queue"]  # Rooms saved before queues were introduced.
+    assert engine.view(s, "audience")["queue"] == []
+    engine.apply(s, "start", "host", {})
+    engine.apply(s, "buzz", "0", {}, now=0)
+    engine.apply(s, "submit_answer", "0", {"answer": "Ahri"})
+    engine.apply(s, "buzz", "1", {})
+    engine.apply(s, "pause", "host", {})
+    with pytest.raises(engine.RuleError, match="paused"):
+        engine.apply(s, "buzz", "2", {})
+    assert not engine.expire(s, now=100)
+    assert s["queue"] == ["1"]
+    engine.apply(s, "resume", "host", {})
+    engine.apply(s, "judge", "host", {"correct": True})
+    assert s["queue"] == [] and s["phase"] == "revealed"
+    assert s["players"][1]["score"] == 0
+    with pytest.raises(engine.RuleError, match="closed"):
+        engine.apply(s, "buzz", "2", {})

@@ -39,8 +39,9 @@ def test_full_game_and_private_projections(client):
     s = get_host(client, s)
     s = command(client, s, "buzz", token=tokens[0]).json()
     assert s["active"] == "0" and "answer" not in s
-    # The losing near-simultaneous buzz never takes over or changes scores.
-    assert command(client, s, "buzz", token=tokens[1]).status_code == 400
+    # The second buzzer queues without taking over the active answer.
+    s = command(client, s, "buzz", token=tokens[1]).json()
+    assert s["active"] == "0" and s["queue"] == ["1"]
     assert (
         command(client, s, "submit_answer", {"answer": "Ahri"}, token=tokens[1]).status_code == 400
     )
@@ -164,3 +165,28 @@ def test_every_champion_starts_with_open_buzzers(client):
     s = command(client, s, "reveal").json()
     s = command(client, s, "next").json()
     assert s["phase"] == "open" and s["index"] == 1
+
+
+def test_simultaneous_buzz_revisions_queue_and_round_boundaries(client):
+    s = room(client)
+    tokens = s["invites"]
+    first = command(client, s, "start").json()
+    payload = {"question_index": first["index"]}
+    s = command(client, first, "buzz", payload, token=tokens[0]).json()
+    buzz_id = str(uuid.uuid4())
+    s = command(client, first, "buzz", payload, token=tokens[1], command_id=buzz_id).json()
+    assert s["active"] == "0" and s["queue"] == ["1"]
+    replay = command(client, first, "buzz", payload, token=tokens[1], command_id=buzz_id)
+    assert replay.status_code == 200 and replay.json()["queue"] == ["1"]
+    assert command(client, first, "buzz", payload, token=tokens[1]).status_code == 400
+    assert command(client, first, "judge", {"correct": False}).status_code == 409
+    s = command(client, s, "judge", {"correct": False}).json()
+    assert s["active"] == "1" and s["locked"] == ["0"]
+    s = command(client, s, "undo").json()
+    assert s["active"] == "0" and s["queue"] == ["1"] and s["paused"]
+    s = command(client, s, "resume").json()
+    s = command(client, s, "judge", {"correct": True}).json()
+    assert s["queue"] == []
+    s = command(client, s, "next").json()
+    assert command(client, first, "buzz", payload, token=tokens[2]).status_code == 409
+    assert get_host(client, s)["active"] is None

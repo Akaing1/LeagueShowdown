@@ -13,11 +13,13 @@ export function Scoreboard({ s }: { s: Show }) {
             <span>
               {s.active === p.id
                 ? "ANSWERING"
-                : s.locked.includes(p.id)
-                  ? "LOCKED UNTIL NEXT QUESTION"
-                  : s.online.includes(p.id)
-                    ? "CONNECTED"
-                    : "DISCONNECTED"}
+                : (s.queue ?? []).includes(p.id)
+                  ? `QUEUED · ${(s.queue ?? []).indexOf(p.id) + 1}`
+                  : s.locked.includes(p.id)
+                    ? "LOCKED UNTIL NEXT QUESTION"
+                    : s.online.includes(p.id)
+                      ? "CONNECTED"
+                      : "DISCONNECTED"}
             </span>
           </div>
           <div className="score">

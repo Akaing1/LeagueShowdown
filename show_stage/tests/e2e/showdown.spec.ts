@@ -74,12 +74,29 @@ test("host runs a round with three private contestants and a safe broadcast view
     .click();
   await expect(players[0].getByLabel("Your answer")).toBeEnabled();
   await expect(
-    players[1].getByRole("button", { name: "Stand by" }),
+    players[1].getByRole("button", { name: "BUZZ IN", exact: true }),
+  ).toBeEnabled();
+  await players[1]
+    .getByRole("button", { name: "BUZZ IN", exact: true })
+    .click();
+  await expect(
+    players[1].getByRole("button", { name: "Queued · 1 in line" }),
+  ).toBeDisabled();
+  await players[1].reload();
+  await expect(
+    players[1].getByRole("button", { name: "Queued · 1 in line" }),
   ).toBeDisabled();
   await players[0].getByLabel("Your answer").fill("Garen");
   await players[0].getByRole("button", { name: "Lock in answer" }).click();
   await expect(page.locator(".submitted strong")).toHaveText("Garen");
   await expect(broadcast.getByText("Garen", { exact: true })).toHaveCount(0);
+  await players[2]
+    .getByRole("button", { name: "BUZZ IN", exact: true })
+    .click();
+  await expect(
+    players[2].getByRole("button", { name: "Queued · 2 in line" }),
+  ).toBeDisabled();
+
   await page.getByRole("button", { name: "Incorrect", exact: false }).click();
   await expect(
     players[0].getByRole("button", { name: "Wait for the next question" }),
@@ -87,24 +104,23 @@ test("host runs a round with three private contestants and a safe broadcast view
   await expect(
     page.locator(".score-card").first().locator(".score"),
   ).toContainText("-100");
+  await expect(players[1].getByLabel("Your answer")).toBeEnabled();
   await expect(
-    players[1].getByRole("button", { name: "BUZZ IN", exact: true }),
-  ).toBeEnabled();
-  await page.getByRole("button", { name: "Reveal next clue" }).click();
-  await expect(
-    players[0].getByRole("button", { name: "Wait for the next question" }),
+    players[2].getByRole("button", { name: "Queued · 1 in line" }),
   ).toBeDisabled();
-  await players[1]
-    .getByRole("button", { name: "BUZZ IN", exact: true })
-    .click();
+
   await players[1].getByLabel("Your answer").fill("Ezreal");
   await players[1].getByRole("button", { name: "Lock in answer" }).click();
   await expect(page.locator(".submitted strong")).toHaveText("Ezreal");
   await page.getByRole("button", { name: "✓ Correct", exact: true }).click();
   await expect(broadcast.locator(".answer-reveal h2")).toHaveText("Ezreal");
   await expect(
+    players[2].getByRole("button", { name: "Stand by", exact: true }),
+  ).toBeDisabled();
+
+  await expect(
     players[1].locator(".score-card").nth(1).locator(".score"),
-  ).toContainText("100");
+  ).toContainText("200");
   await page.getByRole("button", { name: "Undo last action" }).click();
   await expect(page.locator(".status")).toHaveText("Show paused");
   await expect(
@@ -117,7 +133,7 @@ test("host runs a round with three private contestants and a safe broadcast view
   await expect(players[1].locator(".connection")).toHaveText("Connected");
   await expect(
     players[1].locator(".score-card").nth(1).locator(".score"),
-  ).toContainText("100");
+  ).toContainText("200");
   await page.screenshot({
     path: testInfo.outputPath("host.png"),
     fullPage: true,

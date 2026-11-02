@@ -22,6 +22,7 @@ def new_game(names, questions):
         "phase": "lobby",
         "active": None,
         "locked": [],
+        "queue": [],
         "submission": None,
         "deadline": None,
         "paused": False,
@@ -41,7 +42,7 @@ def current_points(state):
     return q["points"][max(0, state["revealed"] - 1)] if q else 0
 
 
-def wrong(state, reason):
+def wrong(state, reason, now):
     player = next(p for p in state["players"] if p["id"] == state["active"])
     player["score"] -= state["wrong_penalty"]
     state["last_result"] = {
@@ -58,6 +59,10 @@ def wrong(state, reason):
         phase="open" if len(state["locked"]) < len(state["players"]) else "clue",
     )
 
+    queue = state.setdefault("queue", [])
+    if queue:
+        state.update(active=queue.pop(0), phase="answering", deadline=now + state["answer_seconds"])
+
 
 def expire(state, now=None):
     now = time.time() if now is None else now
@@ -67,7 +72,7 @@ def expire(state, now=None):
         and state["deadline"] is not None
         and now >= state["deadline"]
     ):
-        wrong(state, "Time expired")
+        wrong(state, "Time expired", now)
         return True
     return False
 
@@ -90,6 +95,7 @@ def apply(state, action, actor, payload, now=None):
             phase="open",
             active=None,
             locked=[],
+            queue=[],
             submission=None,
             deadline=None,
             last_result=None,
@@ -106,11 +112,19 @@ def apply(state, action, actor, payload, now=None):
         state["phase"] = "open"
     elif action == "buzz":
         require(not host and actor in [p["id"] for p in state["players"]], "Contestant required")
-        require(state["phase"] == "open", "Buzzers are closed")
+        require(state["phase"] in {"open", "answering", "judging"}, "Buzzers are closed")
         require(actor not in state["locked"], "Wait for the next question")
-        state.update(
-            phase="answering", active=actor, deadline=now + state["answer_seconds"], submission=None
-        )
+        queue = state.setdefault("queue", [])
+        require(actor != state["active"] and actor not in queue, "Already buzzed in")
+        if state["phase"] == "open":
+            state.update(
+                phase="answering",
+                active=actor,
+                deadline=now + state["answer_seconds"],
+                submission=None,
+            )
+        else:
+            queue.append(actor)
     elif action == "submit_answer":
         require(
             state["phase"] == "answering" and state["active"] == actor,
@@ -136,12 +150,12 @@ def apply(state, action, actor, payload, now=None):
                 "points": points,
                 "reason": "Correct answer",
             }
-            state.update(phase="revealed", active=None, submission=None, deadline=None)
+            state.update(phase="revealed", active=None, submission=None, deadline=None, queue=[])
         else:
-            wrong(state, "Incorrect answer")
+            wrong(state, "Incorrect answer", now)
     elif action == "reveal":
         require(state["phase"] in {"clue", "open"}, "Judge the active contestant first")
-        state.update(phase="revealed", deadline=None)
+        state.update(phase="revealed", deadline=None, queue=[])
     elif action == "pause":
         require(state["phase"] not in {"lobby", "finished"}, "No active round")
         state["remaining"] = max(0, state["deadline"] - now) if state["deadline"] else None
@@ -182,6 +196,7 @@ def view(state, actor):
         )
     }
     result.update(
+        queue=list(state.get("queue", [])),
         total=len(state["questions"]),
         hints=q["hints"][: state["revealed"]] if q else [],
         points=current_points(state),

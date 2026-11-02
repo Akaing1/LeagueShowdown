@@ -1,5 +1,11 @@
 import type { Show } from "../../types/show";
-export function Scoreboard({ s }: { s: Show }) {
+export function Scoreboard({
+  s,
+  seconds,
+}: {
+  s: Show;
+  seconds?: number | null;
+}) {
   return (
     <section className="scoreboard" aria-label="Contestant scores">
       {s.players.map((p, i) => (
@@ -12,14 +18,18 @@ export function Scoreboard({ s }: { s: Show }) {
             <strong>{p.name}</strong>
             <span>
               {s.active === p.id
-                ? "ANSWERING"
-                : (s.queue ?? []).includes(p.id)
-                  ? `QUEUED · ${(s.queue ?? []).indexOf(p.id) + 1}`
-                  : s.locked.includes(p.id)
-                    ? "LOCKED UNTIL NEXT QUESTION"
-                    : s.online.includes(p.id)
-                      ? "CONNECTED"
-                      : "DISCONNECTED"}
+                ? s.phase === "judging"
+                  ? "ANSWER LOCKED"
+                  : `ANSWERING${seconds != null ? ` · ${seconds}s` : ""}`
+                : s.artist === p.id
+                  ? "ARTIST"
+                  : (s.queue ?? []).includes(p.id)
+                    ? `QUEUED · ${(s.queue ?? []).indexOf(p.id) + 1}`
+                    : s.locked.includes(p.id)
+                      ? "LOCKED UNTIL NEXT QUESTION"
+                      : s.online.includes(p.id)
+                        ? "CONNECTED"
+                        : "DISCONNECTED"}
             </span>
           </div>
           <div className="score">

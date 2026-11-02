@@ -39,7 +39,9 @@ export function ContestantControls({
               disabled={s.phase === "judging" || s.paused}
               value={s.submission || answer}
               onChange={(e) => setAnswer(e.target.value)}
-              placeholder="Champion name"
+              placeholder={
+                s.game_type === "scribblol" ? "Ability name" : "Champion name"
+              }
             />
           </label>
           <button

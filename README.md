@@ -107,10 +107,18 @@ CI runs the backend tests and lint checks, the TypeScript/production build, and 
 
 The original prototype has been removed; its source remains available in Git history.
 
-Splash Zone, EmoGG, and ScribbLoL will reuse the room, authentication, scores, and live-screen foundation. They do not have playable implementations in the new application yet.
+Splash Zone and EmoGG will reuse the room, authentication, scores, and live-screen foundation. They do not have playable implementations in the new application yet.
 
 This is an independent community project and is not endorsed by Riot Games.
 
 Use **Fullscreen** in the game header on host, contestant, or broadcast screens. Use **Exit fullscreen** or Escape to leave. For OBS browser sources, use the broadcast link directly at your chosen resolution.
 
 New rooms use the current question pack. Existing rooms retain the questions and scoring they were created with.
+
+## ScribbLoL
+
+Select **ScribbLoL** when creating a showdown. Six ability prompts rotate the artist through all three seats twice. Only the artist and host see the prompt; everyone sees completed strokes. Draw with mouse, touch, or pen using brush colors, an eraser, undo stroke, and clear canvas. The artist cannot buzz.
+
+Each round has 90 seconds of drawing time. Drawing and its clock pause while contestants answer or the host judges; each active guesser gets the existing 15-second answer timer. Other eligible contestants can queue their buzz. A wrong answer or timeout uses that guesser's single attempt for the round, with no points deducted. The first correct guess awards **200 to the guesser and 200 to the artist**, ends the round, and clears the queue. If drawing time expires, both guessers miss, or the host ends an unsolved round, only the artist loses **100 points**. The host judges ability names manually, including acceptable alternate names.
+
+The default pack is `show_runner/app/content/scribblol/default.json`. Prompts are source-visible rehearsal material. The canvas stores at most 200 strokes of 128 points each; use undo/clear if it fills. Saved drawings, timers, and scores survive reconnects/restarts. The host's undo restores the previous game action and pauses; artists undo individual strokes separately.

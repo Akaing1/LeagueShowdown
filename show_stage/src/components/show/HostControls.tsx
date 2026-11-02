@@ -13,6 +13,7 @@ export function HostControls({
   const [copied, setCopied] = useState("");
   const [adjustPlayer, setAdjustPlayer] = useState("0");
   const [adjustPoints, setAdjustPoints] = useState("100");
+  const drawing = s.game_type === "scribblol";
   const room = s.room_id;
   const activePlayer = s.players.find((p) => p.id === s.active);
   async function copyLink(label: string, path: string) {
@@ -53,7 +54,7 @@ export function HostControls({
               disabled={disabled}
               onClick={() => void act("start")}
             >
-              Start Who Am I? →
+              {drawing ? "Start ScribbLoL →" : "Start Who Am I? →"}
             </button>
           )}
           {s.phase === "revealed" && (
@@ -62,10 +63,14 @@ export function HostControls({
               disabled={disabled || s.paused}
               onClick={() => void act("next")}
             >
-              {s.index + 1 === s.total ? "Finish showdown" : "Next champion →"}
+              {s.index + 1 === s.total
+                ? "Finish showdown"
+                : drawing
+                  ? "Next artist →"
+                  : "Next champion →"}
             </button>
           )}
-          {["clue", "open"].includes(s.phase) && (
+          {!drawing && ["clue", "open"].includes(s.phase) && (
             <>
               <button
                 className="primary"
@@ -93,6 +98,14 @@ export function HostControls({
                 Reveal answer / skip
               </button>
             </>
+          )}
+          {drawing && s.phase === "open" && (
+            <button
+              disabled={disabled || s.paused}
+              onClick={() => void act("reveal")}
+            >
+              End round · artist −100
+            </button>
           )}
           {["answering", "judging"].includes(s.phase) && (
             <div className="judge-buttons">

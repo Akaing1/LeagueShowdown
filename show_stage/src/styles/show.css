@@ -765,3 +765,53 @@ footer {
     animation: none;
   }
 }
+
+/* Active answer and drawing stage */
+.score-card.active {
+  border: 2px solid var(--gold);
+  background: #3c321c;
+  box-shadow:
+    0 0 0 2px #d9b96b44,
+    0 0 24px #d9b96b44;
+}
+.score-card.active .player-info span {
+  color: #ffe29b;
+  font-weight: 800;
+}
+.drawing-canvas {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: white;
+  border: 2px solid #567080;
+  border-radius: 8px;
+}
+.drawing-canvas.editable {
+  touch-action: none;
+  cursor: crosshair;
+}
+.drawing-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.drawing-tools label {
+  flex: 1;
+  min-width: 90px;
+}
+.artist-prompt {
+  padding: 12px;
+  border: 1px solid var(--gold);
+  margin-bottom: 12px;
+}
+.artist-prompt p {
+  margin: 6px 0 0;
+  font-size: 13px;
+}
+.drawing-time {
+  color: var(--gold);
+  margin-left: auto;
+  white-space: nowrap;
+}

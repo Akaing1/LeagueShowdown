@@ -1,3 +1,5 @@
+from typing import Literal
+
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 
@@ -23,6 +25,7 @@ class Question(BaseModel):
 
 
 class CreateRoom(BaseModel):
+    game_type: Literal["who_am_i", "scribblol"] = "who_am_i"
     names: list[str] = Field(min_length=3, max_length=3)
 
     @field_validator("names")

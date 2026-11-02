@@ -1,6 +1,7 @@
 """Application composition and lifecycle. Run with app.main:app."""
 
 import asyncio
+import json
 from contextlib import asynccontextmanager, suppress
 
 from fastapi import FastAPI
@@ -8,7 +9,7 @@ from fastapi import FastAPI
 from .api import auth as auth_api
 from .api import frontend, security, websocket
 from .api import rooms as rooms_api
-from .config import database_path, host_password, load_questions
+from .config import APP_ROOT, database_path, host_password, load_questions
 from .services.auth import AuthService
 from .services.rooms import RoomService
 from .storage.sqlite import Store
@@ -19,6 +20,9 @@ def create_app(db_path=None, password=None, questions=None):
     async def lifespan(app):
         app.state.password = host_password(password)
         app.state.questions = load_questions(questions)
+        app.state.drawing_questions = load_questions(
+            json.loads((APP_ROOT / "content/scribblol/default.json").read_text())
+        )
         app.state.store = Store(database_path(db_path))
         app.state.rooms = app.state.store.all()
         app.state.lock = asyncio.Lock()

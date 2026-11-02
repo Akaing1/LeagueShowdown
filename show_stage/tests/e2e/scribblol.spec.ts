@@ -32,6 +32,13 @@ test("drawing stays private, canvas syncs, rewards and artist rotation work", as
   await expect(
     players[0].getByRole("button", { name: "BUZZ IN", exact: true }),
   ).toHaveCount(0);
+  await players[0].getByRole("button", { name: "Red", exact: true }).click();
+  await expect(
+    players[0].getByRole("button", { name: "Red", exact: true }),
+  ).toHaveAttribute("aria-pressed", "true");
+  const brush = players[0].getByRole("slider", { name: "Brush size" });
+  await brush.fill("7");
+  await expect(brush).toHaveValue("7");
   const canvas = players[0].getByRole("img", { name: "Shared drawing canvas" });
   const box = (await canvas.boundingBox())!;
   await players[0].mouse.move(box.x + 20, box.y + 20);
@@ -39,6 +46,22 @@ test("drawing stays private, canvas syncs, rewards and artist rotation work", as
   await players[0].mouse.move(box.x + 100, box.y + 100, { steps: 5 });
   await players[0].mouse.up();
   await expect(broadcast.locator(".drawing-canvas path")).toHaveCount(1);
+  await expect(broadcast.locator(".drawing-canvas path")).toHaveAttribute(
+    "stroke",
+    "#e74c3c",
+  );
+  await expect(broadcast.locator(".drawing-canvas path")).toHaveAttribute(
+    "stroke-width",
+    "7",
+  );
+  await players[0].getByRole("button", { name: "Eraser", exact: true }).click();
+  await expect(
+    players[0].getByRole("button", { name: "Eraser", exact: true }),
+  ).toHaveAttribute("aria-pressed", "true");
+  await expect(
+    players[0].getByRole("button", { name: "Red", exact: true }),
+  ).toHaveAttribute("aria-pressed", "false");
+
   await players[1].reload();
   await expect(players[1].locator(".drawing-canvas path")).toHaveCount(1);
   await players[1]

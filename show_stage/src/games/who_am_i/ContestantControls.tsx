@@ -15,7 +15,13 @@ export function ContestantControls({
   useEffect(() => {
     setAnswer("");
   }, [s.index, s.active]);
-  const canBuzz = s.phase === "open" && !s.paused && !s.locked.includes(s.you);
+  const queuePosition = (s.queue ?? []).indexOf(s.you);
+  const canBuzz =
+    ["open", "answering", "judging"].includes(s.phase) &&
+    !s.paused &&
+    !s.locked.includes(s.you) &&
+    queuePosition < 0 &&
+    s.active !== s.you;
   return (
     <div className="player-actions">
       {s.active === s.you && ["answering", "judging"].includes(s.phase) ? (
@@ -59,12 +65,20 @@ export function ContestantControls({
           >
             {s.locked.includes(s.you)
               ? "Wait for the next question"
-              : canBuzz
-                ? "BUZZ IN"
-                : "Stand by"}
+              : queuePosition >= 0
+                ? `Queued · ${queuePosition + 1} in line`
+                : canBuzz
+                  ? "BUZZ IN"
+                  : "Stand by"}
           </button>
           <p className="muted small">
-            {canBuzz ? "Click to claim your answer." : phaseLabel}
+            {queuePosition >= 0
+              ? "You will answer if the contestants ahead miss."
+              : canBuzz
+                ? s.active
+                  ? "Buzz to join the queue."
+                  : "Click to claim your answer."
+                : phaseLabel}
           </p>
         </>
       )}

@@ -87,7 +87,15 @@ class RoomService:
             if engine.expire(game):
                 room = self.commit(room, game)
                 await self.broadcast(room)
-            if body.revision != room["revision"]:
+            # Near-simultaneous buzzes can share a revision. Scope the exception
+            # to the same question; all other commands retain strict revision checks.
+            same_question_buzz = (
+                body.action == "buzz"
+                and body.revision < room["revision"]
+                and type(body.payload.get("question_index")) is int
+                and body.payload["question_index"] == room["game"]["index"]
+            )
+            if body.revision != room["revision"] and not same_question_buzz:
                 raise HTTPException(409, "The show changed. Please try again.")
             game = deepcopy(room["game"])
             undo = body.action == "undo"

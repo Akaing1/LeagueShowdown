@@ -14,6 +14,7 @@ export type Show = {
   wrong_penalty: number;
   active: string | null;
   locked: string[];
+  queue: string[];
   deadline: number | null;
   paused: boolean;
   remaining: number | null;

@@ -106,7 +106,10 @@ export function useShow(room: string, mode: string) {
           id: crypto.randomUUID(),
           revision: revision.current,
           action,
-          payload,
+          payload:
+            action === "buzz"
+              ? { ...payload, question_index: state?.index }
+              : payload,
         }),
       });
       receive(next);

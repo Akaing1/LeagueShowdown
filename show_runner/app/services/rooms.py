@@ -5,7 +5,7 @@ from copy import deepcopy
 
 from fastapi import HTTPException, WebSocketDisconnect
 
-from ..games.who_am_i import rules as engine
+from ..games import dispatch as engine
 
 
 class RoomService:
@@ -48,11 +48,11 @@ class RoomService:
         clients = list(self.app.state.clients.get(room["id"], {}).items())
         await asyncio.gather(*(self.send(ws, self.snapshot(room, actor)) for ws, actor in clients))
 
-    def commit(self, previous, game, command_id=None, undo=False):
+    def commit(self, previous, game, command_id=None, undo=False, drawing=False):
         room = deepcopy(previous)
         if undo:
             room["history"].pop()
-        else:
+        elif not drawing:
             room["history"] = (room["history"] + [previous["game"]])[-30:]
         room["game"] = game
         room["revision"] += 1
@@ -87,15 +87,15 @@ class RoomService:
             if engine.expire(game):
                 room = self.commit(room, game)
                 await self.broadcast(room)
-            # Near-simultaneous buzzes can share a revision. Scope the exception
-            # to the same question; all other commands retain strict revision checks.
-            same_question_buzz = (
-                body.action == "buzz"
+            # Buzzes and artist strokes can share a revision. Scope these
+            # operations to the same question; control actions remain strict.
+            same_question_input = (
+                body.action in {"buzz", "draw", "erase_stroke", "clear_canvas"}
                 and body.revision < room["revision"]
                 and type(body.payload.get("question_index")) is int
                 and body.payload["question_index"] == room["game"]["index"]
             )
-            if body.revision != room["revision"] and not same_question_buzz:
+            if body.revision != room["revision"] and not same_question_input:
                 raise HTTPException(409, "The show changed. Please try again.")
             game = deepcopy(room["game"])
             undo = body.action == "undo"
@@ -104,6 +104,9 @@ class RoomService:
                     engine.require(actor == "host", "Host access required")
                     engine.require(bool(room["history"]), "Nothing to undo")
                     game = deepcopy(room["history"][-1])
+                    if game.get("game_type") == "scribblol":
+                        # A restored drawing clock resumes from its saved budget.
+                        game["round_deadline"] = None
                     if game["phase"] not in {"lobby", "finished"}:
                         game.update(
                             paused=True,
@@ -116,6 +119,12 @@ class RoomService:
                     engine.apply(game, body.action, actor, body.payload)
             except engine.RuleError as error:
                 raise HTTPException(400, str(error)) from error
-            room = self.commit(room, game, command_id, undo=undo)
+            room = self.commit(
+                room,
+                game,
+                command_id,
+                undo=undo,
+                drawing=body.action in {"draw", "erase_stroke", "clear_canvas"},
+            )
             await self.broadcast(room)
             return self.snapshot(room, actor)

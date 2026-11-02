@@ -2,7 +2,7 @@ import secrets
 
 from fastapi import HTTPException, Request
 
-from ..games.who_am_i import rules as engine
+from ..games import dispatch as engine
 from ..models.requests import Command, CreateRoom
 
 
@@ -29,7 +29,13 @@ def register(app, auth, rooms):
                 "id": secrets.token_urlsafe(12),
                 "revision": 0,
                 "invites": [secrets.token_urlsafe(32) for _ in range(3)],
-                "game": engine.new_game(body.names, app.state.questions),
+                "game": engine.new_game(
+                    body.names,
+                    app.state.drawing_questions
+                    if body.game_type == "scribblol"
+                    else app.state.questions,
+                    body.game_type,
+                ),
                 "history": [],
                 "commands": [],
             }

@@ -18,7 +18,7 @@ Shared branding, fullscreen, connection state, and scores live under `components
 
 Backend tests are grouped under `tests/api`, `tests/games`, and `tests/storage`; shared fixtures and request helpers live at the test root. Playwright scenarios live under `show_stage/tests/e2e`.
 
-New games should add their rules under `app/games/<game>/`, question data under `app/content/<game>/`, and React components under `src/games/<game>/`. Reuse shared authentication, room persistence, and presentation components. Introduce game dispatch when a second game is implemented rather than creating empty game packages now.
+New games should add their rules under `app/games/<game>/`, question data under `app/content/<game>/`, and React components under `src/games/<game>/`. Reuse shared authentication, room persistence, and presentation components. `games/dispatch.py` selects Who Am I or ScribbLoL while defaulting older room snapshots to Who Am I. Shared React host and contestant controls live under `components/show/`. ScribbLoL owns drawing rules and its canvas under the corresponding game directories. Artist strokes are persisted and broadcast without adding host undo entries; artist undo removes one stroke.
 
 ## Updating a checkout
 

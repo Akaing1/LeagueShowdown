@@ -7,6 +7,7 @@ export function LobbyPage() {
   const navigate = useNavigate();
   const [rooms, setRooms] = useState<Room[] | null>(null);
   const [password, setPassword] = useState("");
+  const [gameType, setGameType] = useState("who_am_i");
   const [names, setNames] = useState(["", "", ""]);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
@@ -39,7 +40,7 @@ export function LobbyPage() {
     try {
       const room: Show = await api("/rooms", {
         method: "POST",
-        body: JSON.stringify({ names }),
+        body: JSON.stringify({ names, game_type: gameType }),
       });
       navigate(`/host/${room.room_id}`);
     } catch (e) {
@@ -84,10 +85,22 @@ export function LobbyPage() {
         <section className="panel setup">
           <div className="panel-heading">
             <h2>{rooms ? "Set the stage" : "Host sign in"}</h2>
-            <span className="tag">WHO AM I?</span>
+            <span className="tag">
+              {gameType === "scribblol" ? "SCRIBBLOL" : "WHO AM I?"}
+            </span>
           </div>
           {rooms ? (
             <form onSubmit={create}>
+              <label>
+                Game
+                <select
+                  value={gameType}
+                  onChange={(e) => setGameType(e.target.value)}
+                >
+                  <option value="who_am_i">Who Am I?</option>
+                  <option value="scribblol">ScribbLoL</option>
+                </select>
+              </label>
               <p className="muted">
                 Name your three contestants. Each gets their own private link.
               </p>
@@ -153,7 +166,8 @@ export function LobbyPage() {
           </section>
         )}
         <p className="footnote">
-          Who Am I? is playable. The other three games are planned.
+          Who Am I? and ScribbLoL are playable. Splash Zone and EmoGG are
+          planned.
         </p>
       </main>
     </>

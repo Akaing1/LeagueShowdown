@@ -41,32 +41,53 @@ export function DrawingBoard({
       )}
       {s.you === s.artist && (
         <div className="drawing-tools">
-          <label>
-            Ink
-            <select
-              value={color}
-              disabled={!canDraw}
-              onChange={(e) => setColor(e.target.value)}
-            >
-              <option value="#172d39">Black</option>
-              <option value="#e74c3c">Red</option>
-              <option value="#2e86de">Blue</option>
-              <option value="#27ae60">Green</option>
-              <option value="#f1c40f">Yellow</option>
-              <option value="#ffffff">Eraser</option>
-            </select>
-          </label>
-          <label>
-            Brush
-            <select
+          <div className="ink-palette" role="group" aria-label="Ink color">
+            {[
+              ["Black", "#172d39"],
+              ["Red", "#e74c3c"],
+              ["Blue", "#2e86de"],
+              ["Green", "#27ae60"],
+              ["Yellow", "#f1c40f"],
+            ].map(([name, value]) => (
+              <button
+                key={value}
+                type="button"
+                className="ink-swatch"
+                style={{ backgroundColor: value }}
+                aria-label={name}
+                title={name}
+                aria-pressed={color === value}
+                disabled={!canDraw}
+                onClick={() => setColor(value)}
+              >
+                {color === value && <span aria-hidden="true">✓</span>}
+              </button>
+            ))}
+          </div>
+          <button
+            type="button"
+            className="eraser-tool"
+            aria-pressed={color === "#ffffff"}
+            disabled={!canDraw}
+            onClick={() => setColor("#ffffff")}
+          >
+            Eraser
+          </button>
+          <label className="brush-slider">
+            <span>
+              Brush size <output aria-hidden="true">{width}px</output>
+            </span>
+            <input
+              type="range"
+              aria-label="Brush size"
+              aria-valuetext={`${width} pixels`}
+              min={3}
+              max={24}
+              step={1}
               value={width}
               disabled={!canDraw}
               onChange={(e) => setWidth(Number(e.target.value))}
-            >
-              {[3, 6, 12, 24].map((n) => (
-                <option key={n}>{n}</option>
-              ))}
-            </select>
+            />
           </label>
           <button
             disabled={!canDraw || !s.strokes?.length}

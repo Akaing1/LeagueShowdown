@@ -88,7 +88,7 @@ def apply(state, action, actor, payload, now=None):
                 isinstance(payload.get("color"), str)
                 and payload["color"] in COLORS
                 and type(payload.get("width")) is int
-                and payload["width"] in {3, 6, 12, 24},
+                and 3 <= payload["width"] <= 24,
                 "Invalid brush",
             )
             require(

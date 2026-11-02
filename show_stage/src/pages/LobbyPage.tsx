@@ -94,6 +94,7 @@ export function LobbyPage() {
               <label>
                 Game
                 <select
+                  aria-label="Game"
                   value={gameType}
                   onChange={(e) => setGameType(e.target.value)}
                 >

@@ -99,12 +99,22 @@ export function ShowPage({ mode }: { mode: "host" | "play" | "show" }) {
                       Drawing: {drawingSeconds}s
                     </span>
                   )}
-                {seconds !== null && (
-                  <span className="timer" role="timer">
-                    {seconds}s
-                  </span>
-                )}
               </div>
+              {seconds !== null && s.phase === "answering" && (
+                <div className="answer-countdown">
+                  <span>
+                    {activePlayer?.name} ·{" "}
+                    {s.paused ? "Answer paused" : "Time to answer"}
+                  </span>
+                  <strong
+                    className="timer"
+                    role="timer"
+                    aria-label="Answer time remaining"
+                  >
+                    {seconds}s
+                  </strong>
+                </div>
+              )}
               {s.phase === "lobby" ? (
                 <div className="intro">
                   <div className="mystery">?</div>

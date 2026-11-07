@@ -862,8 +862,9 @@ footer {
   font-variant-numeric: tabular-nums;
 }
 .brush-slider input[type="range"] {
+  margin: 9px 0 0;
   padding: 0;
-  height: 32px;
+  height: 44px;
   accent-color: var(--gold);
   cursor: pointer;
 }
@@ -872,4 +873,27 @@ footer {
 .brush-slider input:focus-visible {
   outline: 3px solid white;
   outline-offset: 4px;
+}
+
+.answer-countdown {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 12px 0;
+  padding: 10px 16px;
+  border: 1px solid var(--gold);
+  border-radius: 8px;
+  background: #3c321c;
+}
+.answer-countdown > span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.answer-countdown .timer {
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+}
+.stage-top {
+  gap: 16px;
 }

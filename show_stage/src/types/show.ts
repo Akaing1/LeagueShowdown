@@ -2,7 +2,9 @@ export type Stroke = { points: number[][]; color: string; width: number };
 export type Player = { id: string; name: string; score: number };
 export type Show = {
   room_id: string;
-  game_type?: "who_am_i" | "scribblol";
+  game_type?: "who_am_i" | "scribblol" | "splash_zone";
+  splash_url?: string | null;
+  crop?: [number, number];
   artist?: string | null;
   strokes?: Stroke[];
   round_deadline?: number | null;

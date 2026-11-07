@@ -104,8 +104,8 @@ class RoomService:
                     engine.require(actor == "host", "Host access required")
                     engine.require(bool(room["history"]), "Nothing to undo")
                     game = deepcopy(room["history"][-1])
-                    if game.get("game_type") == "scribblol":
-                        # A restored drawing clock resumes from its saved budget.
+                    if game.get("game_type") in {"scribblol", "splash_zone"}:
+                        # A restored round clock resumes from its saved budget.
                         game["round_deadline"] = None
                     if game["phase"] not in {"lobby", "finished"}:
                         game.update(

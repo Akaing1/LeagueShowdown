@@ -1,3 +1,4 @@
+import { SplashArt } from "../games/splash_zone/SplashArt";
 import { DrawingBoard } from "../games/scribblol/DrawingBoard";
 import { useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -31,6 +32,12 @@ export function ShowPage({ mode }: { mode: "host" | "play" | "show" }) {
         </main>
       </>
     );
+  const splash = s.game_type === "splash_zone";
+  const gameName = splash
+    ? "Splash Zone"
+    : s.game_type === "scribblol"
+      ? "ScribbLoL"
+      : "Who Am I?";
   const drawing = s.game_type === "scribblol";
   const drawingSeconds = s.round_deadline
     ? Math.max(0, Math.ceil(s.round_deadline - (now + offset.current) / 1000))
@@ -71,7 +78,7 @@ export function ShowPage({ mode }: { mode: "host" | "play" | "show" }) {
                   ? `CONTESTANT · ${player.name}`
                   : "RATS ON THE RIFT"}
             </div>
-            <h1>{drawing ? "ScribbLoL" : "Who Am I?"}</h1>
+            <h1>{gameName}</h1>
           </div>
           <div className="round-label">
             {s.phase === "lobby"
@@ -93,10 +100,11 @@ export function ShowPage({ mode }: { mode: "host" | "play" | "show" }) {
                 >
                   {phaseLabel}
                 </span>
-                {drawing &&
+                {(drawing || splash) &&
                   !["lobby", "finished", "revealed"].includes(s.phase) && (
                     <span className="drawing-time">
-                      Drawing: {drawingSeconds}s
+                      {splash ? "Zoom" : "Drawing"}:{" "}
+                      {splash ? Math.min(30, drawingSeconds) : drawingSeconds}s
                     </span>
                   )}
               </div>
@@ -119,14 +127,18 @@ export function ShowPage({ mode }: { mode: "host" | "play" | "show" }) {
                 <div className="intro">
                   <div className="mystery">?</div>
                   <h2>
-                    {drawing
-                      ? "Draw the ability. Claim the points."
-                      : "Know your champions?"}
+                    {splash
+                      ? "See the detail. Name the champion."
+                      : drawing
+                        ? "Draw the ability. Claim the points."
+                        : "Know your champions?"}
                   </h2>
                   <p>
-                    {drawing
-                      ? "Six rounds. Two turns drawing each."
-                      : "Four clues. Three contestants. One answer."}
+                    {splash
+                      ? "Eight random champions. Thirty seconds to the full picture."
+                      : drawing
+                        ? "Six rounds. Two turns drawing each."
+                        : "Four clues. Three contestants. One answer."}
                   </p>
                   <p className="muted">
                     {drawing
@@ -156,6 +168,8 @@ export function ShowPage({ mode }: { mode: "host" | "play" | "show" }) {
                       : "wins the showdown!"}
                   </p>
                 </div>
+              ) : splash ? (
+                <SplashArt key={s.index} s={s} offset={offset.current} />
               ) : drawing ? (
                 <DrawingBoard s={s} act={act} disabled={disabled} />
               ) : (
@@ -205,9 +219,9 @@ export function ShowPage({ mode }: { mode: "host" | "play" | "show" }) {
           <span>
             {host
               ? "Host decisions are final. Undo pauses the restored round."
-              : `${drawing ? "SCRIBBLOL" : "WHO AM I?"} · LEAGUE OF LEGENDS`}
+              : `${gameName.toUpperCase()} · LEAGUE OF LEGENDS`}
           </span>
-          <span>{drawing ? "04" : "01"} / 04 GAMES</span>
+          <span>{splash ? "02" : drawing ? "04" : "01"} / 04 GAMES</span>
         </footer>
       </main>
     </div>

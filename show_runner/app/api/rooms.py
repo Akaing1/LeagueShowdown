@@ -33,6 +33,8 @@ def register(app, auth, rooms):
                     body.names,
                     app.state.drawing_questions
                     if body.game_type == "scribblol"
+                    else app.state.splash_champions
+                    if body.game_type == "splash_zone"
                     else app.state.questions,
                     body.game_type,
                 ),

@@ -23,6 +23,9 @@ def create_app(db_path=None, password=None, questions=None):
         app.state.drawing_questions = load_questions(
             json.loads((APP_ROOT / "content/scribblol/default.json").read_text())
         )
+        app.state.splash_champions = json.loads(
+            (APP_ROOT / "content/splash_zone/champions.json").read_text()
+        )
         app.state.store = Store(database_path(db_path))
         app.state.rooms = app.state.store.all()
         app.state.lock = asyncio.Lock()

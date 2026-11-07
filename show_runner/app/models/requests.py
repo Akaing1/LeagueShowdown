@@ -25,7 +25,7 @@ class Question(BaseModel):
 
 
 class CreateRoom(BaseModel):
-    game_type: Literal["who_am_i", "scribblol"] = "who_am_i"
+    game_type: Literal["who_am_i", "scribblol", "splash_zone"] = "who_am_i"
     names: list[str] = Field(min_length=3, max_length=3)
 
     @field_validator("names")

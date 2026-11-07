@@ -1,0 +1,694 @@
+[
+  {
+    "answer": "Aatrox",
+    "asset": "Aatrox"
+  },
+  {
+    "answer": "Ahri",
+    "asset": "Ahri"
+  },
+  {
+    "answer": "Akali",
+    "asset": "Akali"
+  },
+  {
+    "answer": "Akshan",
+    "asset": "Akshan"
+  },
+  {
+    "answer": "Alistar",
+    "asset": "Alistar"
+  },
+  {
+    "answer": "Ambessa",
+    "asset": "Ambessa"
+  },
+  {
+    "answer": "Amumu",
+    "asset": "Amumu"
+  },
+  {
+    "answer": "Anivia",
+    "asset": "Anivia"
+  },
+  {
+    "answer": "Annie",
+    "asset": "Annie"
+  },
+  {
+    "answer": "Aphelios",
+    "asset": "Aphelios"
+  },
+  {
+    "answer": "Ashe",
+    "asset": "Ashe"
+  },
+  {
+    "answer": "Aurelion Sol",
+    "asset": "AurelionSol"
+  },
+  {
+    "answer": "Aurora",
+    "asset": "Aurora"
+  },
+  {
+    "answer": "Azir",
+    "asset": "Azir"
+  },
+  {
+    "answer": "Bard",
+    "asset": "Bard"
+  },
+  {
+    "answer": "Bel'Veth",
+    "asset": "Belveth"
+  },
+  {
+    "answer": "Blitzcrank",
+    "asset": "Blitzcrank"
+  },
+  {
+    "answer": "Brand",
+    "asset": "Brand"
+  },
+  {
+    "answer": "Braum",
+    "asset": "Braum"
+  },
+  {
+    "answer": "Briar",
+    "asset": "Briar"
+  },
+  {
+    "answer": "Caitlyn",
+    "asset": "Caitlyn"
+  },
+  {
+    "answer": "Camille",
+    "asset": "Camille"
+  },
+  {
+    "answer": "Cassiopeia",
+    "asset": "Cassiopeia"
+  },
+  {
+    "answer": "Cho'Gath",
+    "asset": "Chogath"
+  },
+  {
+    "answer": "Corki",
+    "asset": "Corki"
+  },
+  {
+    "answer": "Darius",
+    "asset": "Darius"
+  },
+  {
+    "answer": "Diana",
+    "asset": "Diana"
+  },
+  {
+    "answer": "Draven",
+    "asset": "Draven"
+  },
+  {
+    "answer": "Dr. Mundo",
+    "asset": "DrMundo"
+  },
+  {
+    "answer": "Ekko",
+    "asset": "Ekko"
+  },
+  {
+    "answer": "Elise",
+    "asset": "Elise"
+  },
+  {
+    "answer": "Evelynn",
+    "asset": "Evelynn"
+  },
+  {
+    "answer": "Ezreal",
+    "asset": "Ezreal"
+  },
+  {
+    "answer": "Fiddlesticks",
+    "asset": "Fiddlesticks"
+  },
+  {
+    "answer": "Fiora",
+    "asset": "Fiora"
+  },
+  {
+    "answer": "Fizz",
+    "asset": "Fizz"
+  },
+  {
+    "answer": "Galio",
+    "asset": "Galio"
+  },
+  {
+    "answer": "Gangplank",
+    "asset": "Gangplank"
+  },
+  {
+    "answer": "Garen",
+    "asset": "Garen"
+  },
+  {
+    "answer": "Gnar",
+    "asset": "Gnar"
+  },
+  {
+    "answer": "Gragas",
+    "asset": "Gragas"
+  },
+  {
+    "answer": "Graves",
+    "asset": "Graves"
+  },
+  {
+    "answer": "Gwen",
+    "asset": "Gwen"
+  },
+  {
+    "answer": "Hecarim",
+    "asset": "Hecarim"
+  },
+  {
+    "answer": "Heimerdinger",
+    "asset": "Heimerdinger"
+  },
+  {
+    "answer": "Hwei",
+    "asset": "Hwei"
+  },
+  {
+    "answer": "Illaoi",
+    "asset": "Illaoi"
+  },
+  {
+    "answer": "Irelia",
+    "asset": "Irelia"
+  },
+  {
+    "answer": "Ivern",
+    "asset": "Ivern"
+  },
+  {
+    "answer": "Janna",
+    "asset": "Janna"
+  },
+  {
+    "answer": "Jarvan IV",
+    "asset": "JarvanIV"
+  },
+  {
+    "answer": "Jax",
+    "asset": "Jax"
+  },
+  {
+    "answer": "Jayce",
+    "asset": "Jayce"
+  },
+  {
+    "answer": "Jhin",
+    "asset": "Jhin"
+  },
+  {
+    "answer": "Jinx",
+    "asset": "Jinx"
+  },
+  {
+    "answer": "Kai'Sa",
+    "asset": "Kaisa"
+  },
+  {
+    "answer": "Kalista",
+    "asset": "Kalista"
+  },
+  {
+    "answer": "Karma",
+    "asset": "Karma"
+  },
+  {
+    "answer": "Karthus",
+    "asset": "Karthus"
+  },
+  {
+    "answer": "Kassadin",
+    "asset": "Kassadin"
+  },
+  {
+    "answer": "Katarina",
+    "asset": "Katarina"
+  },
+  {
+    "answer": "Kayle",
+    "asset": "Kayle"
+  },
+  {
+    "answer": "Kayn",
+    "asset": "Kayn"
+  },
+  {
+    "answer": "Kennen",
+    "asset": "Kennen"
+  },
+  {
+    "answer": "Kha'Zix",
+    "asset": "Khazix"
+  },
+  {
+    "answer": "Kindred",
+    "asset": "Kindred"
+  },
+  {
+    "answer": "Kled",
+    "asset": "Kled"
+  },
+  {
+    "answer": "Kog'Maw",
+    "asset": "KogMaw"
+  },
+  {
+    "answer": "K'Sante",
+    "asset": "KSante"
+  },
+  {
+    "answer": "LeBlanc",
+    "asset": "Leblanc"
+  },
+  {
+    "answer": "Lee Sin",
+    "asset": "LeeSin"
+  },
+  {
+    "answer": "Leona",
+    "asset": "Leona"
+  },
+  {
+    "answer": "Lillia",
+    "asset": "Lillia"
+  },
+  {
+    "answer": "Lissandra",
+    "asset": "Lissandra"
+  },
+  {
+    "answer": "Locke",
+    "asset": "Locke"
+  },
+  {
+    "answer": "Lucian",
+    "asset": "Lucian"
+  },
+  {
+    "answer": "Lulu",
+    "asset": "Lulu"
+  },
+  {
+    "answer": "Lux",
+    "asset": "Lux"
+  },
+  {
+    "answer": "Malphite",
+    "asset": "Malphite"
+  },
+  {
+    "answer": "Malzahar",
+    "asset": "Malzahar"
+  },
+  {
+    "answer": "Maokai",
+    "asset": "Maokai"
+  },
+  {
+    "answer": "Master Yi",
+    "asset": "MasterYi"
+  },
+  {
+    "answer": "Mel",
+    "asset": "Mel"
+  },
+  {
+    "answer": "Milio",
+    "asset": "Milio"
+  },
+  {
+    "answer": "Miss Fortune",
+    "asset": "MissFortune"
+  },
+  {
+    "answer": "Wukong",
+    "asset": "MonkeyKing"
+  },
+  {
+    "answer": "Mordekaiser",
+    "asset": "Mordekaiser"
+  },
+  {
+    "answer": "Morgana",
+    "asset": "Morgana"
+  },
+  {
+    "answer": "Naafiri",
+    "asset": "Naafiri"
+  },
+  {
+    "answer": "Nami",
+    "asset": "Nami"
+  },
+  {
+    "answer": "Nasus",
+    "asset": "Nasus"
+  },
+  {
+    "answer": "Nautilus",
+    "asset": "Nautilus"
+  },
+  {
+    "answer": "Neeko",
+    "asset": "Neeko"
+  },
+  {
+    "answer": "Nidalee",
+    "asset": "Nidalee"
+  },
+  {
+    "answer": "Nilah",
+    "asset": "Nilah"
+  },
+  {
+    "answer": "Nocturne",
+    "asset": "Nocturne"
+  },
+  {
+    "answer": "Nunu & Willump",
+    "asset": "Nunu"
+  },
+  {
+    "answer": "Olaf",
+    "asset": "Olaf"
+  },
+  {
+    "answer": "Orianna",
+    "asset": "Orianna"
+  },
+  {
+    "answer": "Ornn",
+    "asset": "Ornn"
+  },
+  {
+    "answer": "Pantheon",
+    "asset": "Pantheon"
+  },
+  {
+    "answer": "Poppy",
+    "asset": "Poppy"
+  },
+  {
+    "answer": "Pyke",
+    "asset": "Pyke"
+  },
+  {
+    "answer": "Qiyana",
+    "asset": "Qiyana"
+  },
+  {
+    "answer": "Quinn",
+    "asset": "Quinn"
+  },
+  {
+    "answer": "Rakan",
+    "asset": "Rakan"
+  },
+  {
+    "answer": "Rammus",
+    "asset": "Rammus"
+  },
+  {
+    "answer": "Rek'Sai",
+    "asset": "RekSai"
+  },
+  {
+    "answer": "Rell",
+    "asset": "Rell"
+  },
+  {
+    "answer": "Renata Glasc",
+    "asset": "Renata"
+  },
+  {
+    "answer": "Renekton",
+    "asset": "Renekton"
+  },
+  {
+    "answer": "Rengar",
+    "asset": "Rengar"
+  },
+  {
+    "answer": "Riven",
+    "asset": "Riven"
+  },
+  {
+    "answer": "Rumble",
+    "asset": "Rumble"
+  },
+  {
+    "answer": "Ryze",
+    "asset": "Ryze"
+  },
+  {
+    "answer": "Samira",
+    "asset": "Samira"
+  },
+  {
+    "answer": "Sejuani",
+    "asset": "Sejuani"
+  },
+  {
+    "answer": "Senna",
+    "asset": "Senna"
+  },
+  {
+    "answer": "Seraphine",
+    "asset": "Seraphine"
+  },
+  {
+    "answer": "Sett",
+    "asset": "Sett"
+  },
+  {
+    "answer": "Shaco",
+    "asset": "Shaco"
+  },
+  {
+    "answer": "Shen",
+    "asset": "Shen"
+  },
+  {
+    "answer": "Shyvana",
+    "asset": "Shyvana"
+  },
+  {
+    "answer": "Singed",
+    "asset": "Singed"
+  },
+  {
+    "answer": "Sion",
+    "asset": "Sion"
+  },
+  {
+    "answer": "Sivir",
+    "asset": "Sivir"
+  },
+  {
+    "answer": "Skarner",
+    "asset": "Skarner"
+  },
+  {
+    "answer": "Smolder",
+    "asset": "Smolder"
+  },
+  {
+    "answer": "Sona",
+    "asset": "Sona"
+  },
+  {
+    "answer": "Soraka",
+    "asset": "Soraka"
+  },
+  {
+    "answer": "Swain",
+    "asset": "Swain"
+  },
+  {
+    "answer": "Sylas",
+    "asset": "Sylas"
+  },
+  {
+    "answer": "Syndra",
+    "asset": "Syndra"
+  },
+  {
+    "answer": "Tahm Kench",
+    "asset": "TahmKench"
+  },
+  {
+    "answer": "Taliyah",
+    "asset": "Taliyah"
+  },
+  {
+    "answer": "Talon",
+    "asset": "Talon"
+  },
+  {
+    "answer": "Taric",
+    "asset": "Taric"
+  },
+  {
+    "answer": "Teemo",
+    "asset": "Teemo"
+  },
+  {
+    "answer": "Thresh",
+    "asset": "Thresh"
+  },
+  {
+    "answer": "Tristana",
+    "asset": "Tristana"
+  },
+  {
+    "answer": "Trundle",
+    "asset": "Trundle"
+  },
+  {
+    "answer": "Tryndamere",
+    "asset": "Tryndamere"
+  },
+  {
+    "answer": "Twisted Fate",
+    "asset": "TwistedFate"
+  },
+  {
+    "answer": "Twitch",
+    "asset": "Twitch"
+  },
+  {
+    "answer": "Udyr",
+    "asset": "Udyr"
+  },
+  {
+    "answer": "Urgot",
+    "asset": "Urgot"
+  },
+  {
+    "answer": "Varus",
+    "asset": "Varus"
+  },
+  {
+    "answer": "Vayne",
+    "asset": "Vayne"
+  },
+  {
+    "answer": "Veigar",
+    "asset": "Veigar"
+  },
+  {
+    "answer": "Vel'Koz",
+    "asset": "Velkoz"
+  },
+  {
+    "answer": "Vex",
+    "asset": "Vex"
+  },
+  {
+    "answer": "Vi",
+    "asset": "Vi"
+  },
+  {
+    "answer": "Viego",
+    "asset": "Viego"
+  },
+  {
+    "answer": "Viktor",
+    "asset": "Viktor"
+  },
+  {
+    "answer": "Vladimir",
+    "asset": "Vladimir"
+  },
+  {
+    "answer": "Volibear",
+    "asset": "Volibear"
+  },
+  {
+    "answer": "Warwick",
+    "asset": "Warwick"
+  },
+  {
+    "answer": "Xayah",
+    "asset": "Xayah"
+  },
+  {
+    "answer": "Xerath",
+    "asset": "Xerath"
+  },
+  {
+    "answer": "Xin Zhao",
+    "asset": "XinZhao"
+  },
+  {
+    "answer": "Yasuo",
+    "asset": "Yasuo"
+  },
+  {
+    "answer": "Yone",
+    "asset": "Yone"
+  },
+  {
+    "answer": "Yorick",
+    "asset": "Yorick"
+  },
+  {
+    "answer": "Yunara",
+    "asset": "Yunara"
+  },
+  {
+    "answer": "Yuumi",
+    "asset": "Yuumi"
+  },
+  {
+    "answer": "Zaahen",
+    "asset": "Zaahen"
+  },
+  {
+    "answer": "Zac",
+    "asset": "Zac"
+  },
+  {
+    "answer": "Zed",
+    "asset": "Zed"
+  },
+  {
+    "answer": "Zeri",
+    "asset": "Zeri"
+  },
+  {
+    "answer": "Ziggs",
+    "asset": "Ziggs"
+  },
+  {
+    "answer": "Zilean",
+    "asset": "Zilean"
+  },
+  {
+    "answer": "Zoe",
+    "asset": "Zoe"
+  },
+  {
+    "answer": "Zyra",
+    "asset": "Zyra"
+  }
+]

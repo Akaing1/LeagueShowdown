@@ -122,3 +122,27 @@ Select **ScribbLoL** when creating a showdown. Six ability prompts rotate the ar
 Each round has 90 seconds of drawing time. Drawing and its clock pause while contestants answer or the host judges; each active guesser gets the existing 15-second answer timer. Other eligible contestants can queue their buzz. A wrong answer or timeout uses that guesser's single attempt for the round, with no points deducted. The first correct guess awards **200 to the guesser and 200 to the artist**, ends the round, and clears the queue. If drawing time expires, both guessers miss, or the host ends an unsolved round, only the artist loses **100 points**. The host judges ability names manually, including acceptable alternate names.
 
 The default pack is `show_runner/app/content/scribblol/default.json`. Prompts are source-visible rehearsal material. The canvas stores at most 200 strokes of 128 points each; use undo/clear if it fills. Saved drawings, timers, and scores survive reconnects/restarts. The host's undo restores the previous game action and pauses; artists undo individual strokes separately.
+
+### Splash Zone
+
+Choose **Splash Zone** when creating a showdown. Each room selects eight distinct
+random champions from the bundled Data Dragon 16.22.1 roster, using their base
+splash art. Each round starts at a random crop at 12× zoom and smoothly reveals
+the full image over 30 seconds of active zoom time.
+
+Buzzing freezes the shared zoom. Other contestants can queue while someone is
+answering or being judged; an incorrect guess or answer timeout promotes the next
+queued contestant. Once the queue is empty, zooming resumes from the saved point.
+Wrong guessers are locked out until the next round. Correct guesses earn 200
+points; wrong guesses and answer timeouts lose 100. After 30 seconds the full
+image stays available to remaining guessers. The host reveals/skips if nobody
+gets it. Host pause/resume, undo and reconnect preserve the shared clock and crop.
+
+Images load directly from Riot's public Data Dragon CDN, so participant browsers
+need internet access. Loading failures show a retry button; the host can pause or
+skip if needed. This is a host-led party game: the image URL identifies the
+champion to someone inspecting browser network traffic, so contestants should
+play without developer tools.
+
+Asset source and URL format: https://developer.riotgames.com/docs/lol#data-dragon
+League of Legends splash art and champion data belong to Riot Games.

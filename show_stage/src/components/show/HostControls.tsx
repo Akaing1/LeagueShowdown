@@ -13,6 +13,7 @@ export function HostControls({
   const [copied, setCopied] = useState("");
   const [adjustPlayer, setAdjustPlayer] = useState("0");
   const [adjustPoints, setAdjustPoints] = useState("100");
+  const splash = s.game_type === "splash_zone";
   const drawing = s.game_type === "scribblol";
   const room = s.room_id;
   const activePlayer = s.players.find((p) => p.id === s.active);
@@ -54,7 +55,11 @@ export function HostControls({
               disabled={disabled}
               onClick={() => void act("start")}
             >
-              {drawing ? "Start ScribbLoL →" : "Start Who Am I? →"}
+              {splash
+                ? "Start Splash Zone →"
+                : drawing
+                  ? "Start ScribbLoL →"
+                  : "Start Who Am I? →"}
             </button>
           )}
           {s.phase === "revealed" && (
@@ -70,7 +75,7 @@ export function HostControls({
                   : "Next champion →"}
             </button>
           )}
-          {!drawing && ["clue", "open"].includes(s.phase) && (
+          {!drawing && !splash && ["clue", "open"].includes(s.phase) && (
             <>
               <button
                 className="primary"
@@ -98,6 +103,14 @@ export function HostControls({
                 Reveal answer / skip
               </button>
             </>
+          )}
+          {splash && ["clue", "open"].includes(s.phase) && (
+            <button
+              disabled={disabled || s.paused}
+              onClick={() => void act("reveal")}
+            >
+              Reveal answer / skip
+            </button>
           )}
           {drawing && s.phase === "open" && (
             <button

@@ -1,0 +1,74 @@
+[
+  {
+    "answer": "Warmog's Armor",
+    "hints": [
+      "After avoiding damage for several seconds, regenerate health rapidly if you have enough bonus health. Also gain bonus health based on health from items."
+    ],
+    "points": [
+      100
+    ]
+  },
+  {
+    "answer": "Heartsteel",
+    "hints": [
+      "Charge up near an enemy champion to empower your next attack against them, dealing bonus physical damage and permanently increasing your maximum health. Your size increases with maximum health."
+    ],
+    "points": [
+      100
+    ]
+  },
+  {
+    "answer": "Statikk Shiv",
+    "hints": [
+      "Energized attacks unleash chain lightning that deals magic damage and applies on-hit effects to nearby targets. Basic attacks grant extra Energized stacks."
+    ],
+    "points": [
+      100
+    ]
+  },
+  {
+    "answer": "Rylai's Crystal Scepter",
+    "hints": [
+      "Damaging abilities slow enemies by 30% for one second."
+    ],
+    "points": [
+      100
+    ]
+  },
+  {
+    "answer": "Blade of the Ruined King",
+    "hints": [
+      "Attacks deal bonus physical damage based on the target's current health. Attacking a champion three times slows them."
+    ],
+    "points": [
+      100
+    ]
+  },
+  {
+    "answer": "Maw of Malmortius",
+    "hints": [
+      "Magic damage that would drop you below 30% health grants a magic-damage shield and omnivamp until combat ends."
+    ],
+    "points": [
+      100
+    ]
+  },
+  {
+    "answer": "Spear of Shojin",
+    "hints": [
+      "Gain basic ability haste. Dealing ability damage builds stacks that increase your ability and passive damage."
+    ],
+    "points": [
+      100
+    ]
+  },
+  {
+    "answer": "Thornmail",
+    "hints": [
+      "When an attack hits you, deal magic damage back to the attacker. If they are a champion, also apply a healing-reduction debuff."
+    ],
+    "points": [
+      100
+    ]
+  }
+]

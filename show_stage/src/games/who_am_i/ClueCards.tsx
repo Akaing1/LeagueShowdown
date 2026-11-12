@@ -2,7 +2,11 @@ import type { Show } from "../../types/show";
 export function ClueCards({ s }: { s: Show }) {
   return (
     <div className="clues">
-      <div className="eyebrow">IDENTIFY THE CHAMPION</div>
+      <div className="eyebrow">
+        {s.game_type === "shoplifting"
+          ? "IDENTIFY THE ITEM"
+          : "IDENTIFY THE CHAMPION"}
+      </div>
       {Array.from({ length: s.hint_count }, (_, i) => (
         <div
           key={`${s.index}-${i}-${i < s.hints.length}`}

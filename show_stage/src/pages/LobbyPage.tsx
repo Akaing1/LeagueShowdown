@@ -79,18 +79,20 @@ export function LobbyPage() {
         <div className="lineup">
           <span className="selected">01 · Who Am I?</span>
           <span>02 · Splash Zone</span>
-          <span>03 · EmoGG</span>
+          <span>03 · Shoplifting</span>
           <span>04 · ScribbLoL</span>
         </div>
         <section className="panel setup">
           <div className="panel-heading">
             <h2>{rooms ? "Set the stage" : "Host sign in"}</h2>
             <span className="tag">
-              {gameType === "splash_zone"
-                ? "SPLASH ZONE"
-                : gameType === "scribblol"
-                  ? "SCRIBBLOL"
-                  : "WHO AM I?"}
+              {gameType === "shoplifting"
+                ? "SHOPLIFTING"
+                : gameType === "splash_zone"
+                  ? "SPLASH ZONE"
+                  : gameType === "scribblol"
+                    ? "SCRIBBLOL"
+                    : "WHO AM I?"}
             </span>
           </div>
           {rooms ? (
@@ -103,6 +105,7 @@ export function LobbyPage() {
                   onChange={(e) => setGameType(e.target.value)}
                 >
                   <option value="who_am_i">Who Am I?</option>
+                  <option value="shoplifting">Shoplifting</option>
                   <option value="splash_zone">Splash Zone</option>
                   <option value="scribblol">ScribbLoL</option>
                 </select>
@@ -172,7 +175,7 @@ export function LobbyPage() {
           </section>
         )}
         <p className="footnote">
-          Who Am I?, Splash Zone and ScribbLoL are playable. EmoGG is planned.
+          Who Am I?, Splash Zone, Shoplifting and ScribbLoL are playable.
         </p>
       </main>
     </>

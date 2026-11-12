@@ -13,6 +13,7 @@ export function HostControls({
   const [copied, setCopied] = useState("");
   const [adjustPlayer, setAdjustPlayer] = useState("0");
   const [adjustPoints, setAdjustPoints] = useState("100");
+  const shop = s.game_type === "shoplifting";
   const splash = s.game_type === "splash_zone";
   const drawing = s.game_type === "scribblol";
   const room = s.room_id;
@@ -35,7 +36,12 @@ export function HostControls({
         </div>
         <div className="host-answer">
           <span className="eyebrow">ANSWER KEY</span>
-          <strong>{s.answer || "Start to see the first champion"}</strong>
+          <strong>
+            {s.answer ||
+              (shop
+                ? "Start to see the first item"
+                : "Start to see the first champion")}
+          </strong>
           {s.all_hints?.map((hint, i) => (
             <p key={i} className={i < s.revealed ? "muted" : ""}>
               {i + 1}. {hint}
@@ -55,11 +61,13 @@ export function HostControls({
               disabled={disabled}
               onClick={() => void act("start")}
             >
-              {splash
-                ? "Start Splash Zone →"
-                : drawing
-                  ? "Start ScribbLoL →"
-                  : "Start Who Am I? →"}
+              {shop
+                ? "Start Shoplifting →"
+                : splash
+                  ? "Start Splash Zone →"
+                  : drawing
+                    ? "Start ScribbLoL →"
+                    : "Start Who Am I? →"}
             </button>
           )}
           {s.phase === "revealed" && (
@@ -72,7 +80,9 @@ export function HostControls({
                 ? "Finish showdown"
                 : drawing
                   ? "Next artist →"
-                  : "Next champion →"}
+                  : shop
+                    ? "Next item →"
+                    : "Next champion →"}
             </button>
           )}
           {!drawing && !splash && ["clue", "open"].includes(s.phase) && (
@@ -89,12 +99,14 @@ export function HostControls({
               >
                 Open buzzers
               </button>
-              <button
-                disabled={disabled || s.paused || s.revealed === s.hint_count}
-                onClick={() => void act("hint")}
-              >
-                Reveal next clue
-              </button>
+              {!shop && (
+                <button
+                  disabled={disabled || s.paused || s.revealed === s.hint_count}
+                  onClick={() => void act("hint")}
+                >
+                  Reveal next clue
+                </button>
+              )}
               <button
                 className="quiet"
                 disabled={disabled || s.paused}

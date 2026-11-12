@@ -35,6 +35,8 @@ def register(app, auth, rooms):
                     if body.game_type == "scribblol"
                     else app.state.splash_champions
                     if body.game_type == "splash_zone"
+                    else app.state.shop_questions
+                    if body.game_type == "shoplifting"
                     else app.state.questions,
                     body.game_type,
                 ),

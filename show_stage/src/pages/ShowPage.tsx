@@ -32,12 +32,15 @@ export function ShowPage({ mode }: { mode: "host" | "play" | "show" }) {
         </main>
       </>
     );
+  const shop = s.game_type === "shoplifting";
   const splash = s.game_type === "splash_zone";
-  const gameName = splash
-    ? "Splash Zone"
-    : s.game_type === "scribblol"
-      ? "ScribbLoL"
-      : "Who Am I?";
+  const gameName = shop
+    ? "Shoplifting"
+    : splash
+      ? "Splash Zone"
+      : s.game_type === "scribblol"
+        ? "ScribbLoL"
+        : "Who Am I?";
   const drawing = s.game_type === "scribblol";
   const drawingSeconds = s.round_deadline
     ? Math.max(0, Math.ceil(s.round_deadline - (now + offset.current) / 1000))
@@ -127,23 +130,29 @@ export function ShowPage({ mode }: { mode: "host" | "play" | "show" }) {
                 <div className="intro">
                   <div className="mystery">?</div>
                   <h2>
-                    {splash
-                      ? "See the detail. Name the champion."
-                      : drawing
-                        ? "Draw the ability. Claim the points."
-                        : "Know your champions?"}
+                    {shop
+                      ? "Know your items?"
+                      : splash
+                        ? "See the detail. Name the champion."
+                        : drawing
+                          ? "Draw the ability. Claim the points."
+                          : "Know your champions?"}
                   </h2>
                   <p>
-                    {splash
-                      ? "Eight random champions. Thirty seconds to the full picture."
-                      : drawing
-                        ? "Six rounds. Two turns drawing each."
-                        : "Four clues. Three contestants. One answer."}
+                    {shop
+                      ? "Eight items. Read the passives and buzz in."
+                      : splash
+                        ? "Eight random champions. Thirty seconds to the full picture."
+                        : drawing
+                          ? "Six rounds. Two turns drawing each."
+                          : "Four clues. Three contestants. One answer."}
                   </p>
                   <p className="muted">
-                    {drawing
-                      ? "Artist and first correct guesser earn 200 each. Nobody correct? Artist loses 100."
-                      : `Guess early for more points. A wrong answer costs ${s.wrong_penalty} points.`}
+                    {shop
+                      ? "Correct answers earn 100 points. Wrong answers or timeouts cost 100."
+                      : drawing
+                        ? "Artist and first correct guesser earn 200 each. Nobody correct? Artist loses 100."
+                        : `Guess early for more points. A wrong answer costs ${s.wrong_penalty} points.`}
                   </p>
                 </div>
               ) : s.phase === "finished" ? (
@@ -178,7 +187,11 @@ export function ShowPage({ mode }: { mode: "host" | "play" | "show" }) {
               {s.phase === "revealed" && (
                 <div className="answer-reveal">
                   <div className="eyebrow">
-                    {drawing ? "THE ABILITY IS" : "THE CHAMPION IS"}
+                    {shop
+                      ? "THE ITEM IS"
+                      : drawing
+                        ? "THE ABILITY IS"
+                        : "THE CHAMPION IS"}
                   </div>
                   <h2>{s.answer}</h2>
                 </div>
@@ -221,7 +234,9 @@ export function ShowPage({ mode }: { mode: "host" | "play" | "show" }) {
               ? "Host decisions are final. Undo pauses the restored round."
               : `${gameName.toUpperCase()} · LEAGUE OF LEGENDS`}
           </span>
-          <span>{splash ? "02" : drawing ? "04" : "01"} / 04 GAMES</span>
+          <span>
+            {shop ? "03" : splash ? "02" : drawing ? "04" : "01"} / 04 GAMES
+          </span>
         </footer>
       </main>
     </div>

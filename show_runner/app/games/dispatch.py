@@ -13,7 +13,10 @@ def rules(state):
 
 
 def new_game(names, questions, game_type="who_am_i"):
-    return rules({"game_type": game_type}).new_game(names, questions)
+    state = rules({"game_type": game_type}).new_game(names, questions)
+    if game_type == "shoplifting":
+        state["game_type"] = game_type
+    return state
 
 
 def apply(state, action, actor, payload, now=None):
@@ -26,5 +29,5 @@ def expire(state, now=None):
 
 def view(state, actor):
     result = rules(state).view(state, actor)
-    result.setdefault("game_type", "who_am_i")
+    result.setdefault("game_type", state.get("game_type", "who_am_i"))
     return result
